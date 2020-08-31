@@ -1,0 +1,50 @@
+{% load static %}
+<style>
+  .item{    
+    font-size: larger;
+    font-weight: 900;
+    color: lightgray ;
+  }
+  /*#home{
+    color: brown;
+  }
+  #dice{
+    color: pink;    
+  }
+  #settings{
+    color: burlywood;
+  }
+  */
+  .active{
+    color:  darkorange !important;    
+  }  
+  a { color: inherit; } 
+</style>
+<nav class="navbar fixed-bottom navbar-expand-lg navbar-light white scrolling-navbar">
+  <div class="container-fluid">    
+    <div onclick="make_active('#home')" id="home" class="item ">
+      <a href="/"><span class="fas fa-home fa-2x" ></span></a>
+    </div>
+    <div onclick="make_active('#dice')" id="dice" class="item ">
+      <a href="/play"><span class="fas fa-dice fa-2x" ></span></a>
+    </div>
+    
+    {% if request.user.is_authenticated %}
+    <div onclick="make_active('#settings')" id="settings" class="item ">
+      <a href="/profile"><span class="fas fa-cog fa-2x" ></span></a>
+    </div>
+    {% else %}
+    <div onclick="make_active('#login')" id="login" class="item ">
+      <a href="{% url 'account_login'  %}"><span class="fas fa-sign-in-alt fa-2x" ></span></a>
+    </div>
+    {% endif %}
+  </div>
+</nav>  
+{% block nav_extra_scripts %}    
+<script>
+  function make_active(id_act){
+    $('.item').removeClass('active');
+    $(id_act).addClass('active');
+  }
+</script>
+{% endblock nav_extra_scripts %}

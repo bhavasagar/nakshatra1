@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{%load static%}
+
+{% block head_title %}Nakshatra | Settings{% endblock %}
+
+{% block extra_head %}
+<style>
+.inside{
+  background-image: linear-gradient(90deg, #FF7F50, darkorange);
+  font-family: 'Noto Sans JP', sans-serif;
+  margin-top: -2%;
+}
+.profilepic{
+  float: left;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  padding: 3%;
+}
+img { 
+  width: 100%; 
+  height: 100%; 
+  border-radius: 50%;
+  object-fit: contain; 
+} 
+.text_in_head{
+  float: right;
+  font-weight: 900;
+  margin-top:-3%;
+}
+.right1{
+  text-align: right;
+  position: relative;
+  left: auto;
+  padding: 2%;
+  text-transform: capitalize;
+  color: white;
+  margin-right: 2%;
+  font-size: 1.1em;
+  font-weight: 1000;
+}
+.line{  
+  margin:2%;
+  border: 3px solid black;
+  border-radius: 7px;
+  margin-bottom: 5%;
+  text-align: center;
+  padding: 5%;
+  font-size: 0.6em !important;
+  width: max-content;
+  cursor: pointer;
+}
+.line>p{
+  text-align: center;
+}
+.box{
+  display: none;
+}
+.visible{
+  display: block;
+}
+.input-field
+{
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid rgb(211, 200, 200);
+  width: 250px;
+  outline: none;
+}
+.login-button{
+  box-sizing: border-box;
+  color: white;
+  font-size: 14px;
+  padding: 13px;
+  border-radius: 7px;
+  border: none;
+  width: 250px;
+  outline: none;
+  background-color: rgb(215, 230, 17);
+}
+.detail{
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid rgb(211, 200, 200);
+  width: 250px;
+  outline: none;
+  margin: 1%;
+  text-transform: capitalize;
+}
+#view_details{
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.back-button{
+  box-sizing: border-box;
+  color: white;
+  font-size: 14px;
+  padding: 7px;
+  border-radius: 7px;
+  border: none;
+  width: 100px;
+  float: right;
+  margin-right: 10%;
+  margin-top: 5%;
+  outline: none;
+  background-color: black;
+}
+a{
+  color: inherit;
+}
+.center{
+  text-align: center;
+  margin-top: -3%;
+  text-transform: capitalize;
+  color: white;
+  margin-right: 2%;
+  font-size: 1.1em;
+  font-weight: 1000;
+}
+</style>
+{% endblock extra_head%}
+
+{% block content %}
+<style>
+  #settings{
+    color:  darkorange !important;    
+  }
+</style>
+<div class="comfortable">
+  <div class="inside">
+    <div class="profile_heading">  
+      <div class="profilepic">
+        {% if  request.user.userprofile.userphoto.url %}
+          <img class="img" src="{{request.user.userprofile.userphoto.url}}">
+        {% endif %}
+      </div>
+      <div class="right pt-2">
+        <p class="right1 pl-6" >{{request.user.username}}</p>
+        <p class="right1" style="margin-top:-5%">Balance: Rs. {{request.user.userprofile.total_amount}}</p> 
+        <p class="right1" style="margin-top:-2%"></p>     
+        <!-- <p class="right1" style="margin-top:-3%">Won: Rs.{{request.user.userprofile.won}}</p> -->
+      </div>
+      <p class="center" >Bonus : Rs.{{request.user.userprofile.refer_income}}</p>     
+    </div>
+  </div>
+  <div >
+    <div class="visible" id="cont">
+      <center>
+      <div   class="line mt-2 mb-6">
+        <a href="{{request.user.userprofile.get_absolute_url}}"><span class="far fa-share-square fa-2x">  Share link</span> </a>
+      </div>
+      <div id="wamt" onclick="openbox('withdraw_amt')"  class="line mb-6">
+        <span class="fas fa-hand-holding fa-2x">  Withdraw Amount</span>        
+      </div>
+      <div id="aset" onclick="openbox('change_details')" class="line mb-6">
+        <span class="fas fa-cog fa-2x">  My Account Settings</span>
+      </div>
+      <div id="detail" onclick="openbox('view_details')" class="line mb-6">
+        <span class="fas fa-info-circle fa-2x">  My Details</span>
+      </div>  
+      <div id="promo" onclick="openbox('promotions')" class="line mb-6">
+        <span class="fas fa-gifts fa-2x">  My Promotions</span>
+      </div>
+      <div id="transactions" onclick="openbox('transaction')" class="line mb-6">
+        <span class="fas fa-wallet fa-2x">  My Wallet</span>
+      </div>    
+      <div id="contact" class="line mb-6">
+        <a href="{% url 'core:contact' %}"><span class="fas fa-satellite-dish fa-2x">  Contact</span></a>
+      </div>
+      <div id="ppolicy" class="line mb-6">
+        <a href="{% url 'core:privacy' %}"><span class="fas fa-user-secret fa-2x">  Privacy Policy</span></a>
+      </div>
+      <div id="logout" class="line mb-6" style="border:3px solid tomato;margin-bottom:22%"">
+        <a href="{% url 'account_logout' %}"><span class="fas fa-sign-out-alt fa-2x" style="color: tomato;">Logout</span></a>
+      </div>
+      </center>
+    </div>
+    <div id="withdraw_amt" class="box">
+      <form action="." method="POST" enctype="multipart/form-data">
+        <center>
+        <div class="form-container">
+          <h1>WithDraw Form</h1>
+          <h5>Amount can't be less than Rs. 100</h5>
+          <input type="number" name="amt" placeholder="Amount" class="input-field">
+          <br><br>
+          <input type="text" name="upiid" placeholder="UPI ID or Paytm Number" class="input-field">
+                <br><br>
+          <button class="login-button" type="submit">WithDraw</button>
+        </div>
+        </center>
+      </form>
+      <button onclick="backbox()" class="back-button">&lt;&lt;Back</button>
+    </div>    
+    <div id="change_details" class="box">
+      <form action="." method="POST" enctype="multipart/form-data">
+        <center>
+        <div class="form-container">
+          <h1>Change Account Details</h1>                    
+          <input type="text" name="uname" placeholder="Username" class="input-field">          
+          <button class="login-button" type="submit">Change</button>
+                <br><br>                  
+          <input type="text" name="email" placeholder="Email" class="input-field">          
+          <button class="login-button" type="submit">Change</button>
+                <br><br>                  
+          <input type="text" name="pnumber" placeholder="Phone number" class="input-field">          
+          <button class="login-button" type="submit">Change</button>        
+                <br><br>                  
+          <input class="file-upload input-field" name="image" type="file" accept="image/*">          
+          <button class="login-button" type="submit">Change</button>        
+                <br><br>
+        </div>
+        </center>
+      </form>
+      <button onclick="backbox()" class="back-button" style="margin-bottom: 20%;">&lt;&lt;Back</button>
+    </div>
+    <div id="promotions" class="box">
+      <h4 class="ml-3" style="color: tomato;">Downliners</h4>
+      <center>
+      {% if refers %}
+      {% for i in refers %}
+      <div class="row card p-3 ml-2 mr-2" style="background-color:rgb(211, 200, 200);text-transform:capitalize">        
+        {{i.user.username}} - Rs. {{i.user.userprofile.total_amount}}
+      </div>
+      {% endfor %}
+      {% else %}
+      No referers upto now.
+      {% endif %}
+      </center>
+      <button onclick="backbox()" class="back-button" style="margin-bottom: 20%;">&lt;&lt;Back</button>
+    </div>
+    <div id="transaction" class="box">
+      <div class="row card p-3 ml-2 mr-2" style="color: tomato;background-color:rgb(211, 200, 200);">        
+        My Balance : Rs. {{ request.user.userprofile.total_amount }}
+      </div>
+      <h3 class="ml-2 mt-3">Transactions</h3>
+      <h4 class="ml-3" style="color: lightgreen;">Recent Recharges</h4>
+      <center>
+      {% if recharges %}
+      {% for i in recharges %}
+      <div class="row card p-3 ml-2 mr-2" style="color: lightgreen;background-color:rgb(211, 200, 200);">        
+        On  {{i.made_on}} for  Rs. {{ i.amount }}
+      </div>
+      {% endfor %}
+      {% else %}
+      No recharge is made till now.
+      {% endif %}
+    </center>
+      <h4 class="ml-3" style="color: tomato;">Recent Withdrawls</h4>
+      <center>
+      {% if withdrawls %}
+      {% for i in withdrawls %}
+      <div class="row card p-3 ml-2 mr-2" style="color: tomato;background-color:rgb(211, 200, 200);">        
+        On  {{i.made_on}} for  Rs. {{ i.amount }} to {{ i.UPIID }}
+      </div>
+      {% endfor %}
+      {% else %}
+      No withdraw is done upto now.
+      {% endif %}
+      </center>
+      <button onclick="backbox()" class="back-button" style="margin-bottom: 20%;">&lt;&lt;Back</button>
+    </div>
+    <div id="view_details" class="box">
+      <div class="row">
+        <div class="col detail">
+          Refer Link :
+        </div>
+        <div class="col detail" style="color: skyblue;">
+          <a href="{{ request.user.userprofile.get_absolute_url }}">click here</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col detail">
+          Name : 
+        </div>
+        <div class="col detail">
+          {{request.user.username}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col detail">
+          Phone : 
+        </div>
+        <div class="col detail">
+          {{request.user.userprofile.phone_number}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col detail">
+          Email : 
+        </div>
+        <div class="col detail" style="text-transform: lowercase;">
+          {{request.user.email}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col detail">
+          withdrawable : 
+        </div>
+        <div class="col detail">
+          Rs. {{request.user.userprofile.total_amount}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col detail">
+          Amount Won : 
+        </div>
+        <div class="col detail">
+          Rs. {{request.user.userprofile.won}}
+        </div>
+      </div>
+      <button onclick="backbox()" class="back-button">&lt;&lt;Back</button>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+function openbox(id_to_open){
+  var opn = "#" +id_to_open;
+  $('.visible').attr('class','box');
+  $(opn).attr('class','visible');
+}
+function backbox(){
+  $('.visible').attr('class','box');
+  $('#cont').attr('class','visible');
+}
+</script>
+<script>
+  
+</script>
+{% endblock extra_scripts %}

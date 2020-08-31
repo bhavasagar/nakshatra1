@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{%load static%}
+{% block head_title %}Nakshatra | Payment{% endblock %}
+
+{% block extra_head %}
+<style>
+.input-field
+{
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid rgb(168, 168, 168);
+  width: 250px;
+  outline: none;
+}
+.login-button{
+  box-sizing: border-box;
+  color: white;
+  font-size: 14px;
+  padding: 13px;
+  border-radius: 7px;
+  border: none;
+  width: 250px;
+  outline: none;
+  background-color: rgb(86, 182, 226);
+}
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<div id="withdraw_amt" class="box">
+    <form action="." method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <center>
+      <div class="form-container">
+        <h1>Recharge Form</h1>
+        <h5 class="mb-5">Amount can't be less than Rs. 100</h5>
+        <input type="number" name="amt" placeholder="Amount" class="input-field">
+        <br><br>
+        <button class="login-button" type="submit">Recharge</button>
+      </div>
+      </center>
+    </form>    
+</div>
+{% endblock content %}
+
+{% block nav_extra_scripts %}
+{% endblock nav_extra_scripts %}
