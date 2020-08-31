@@ -10,7 +10,7 @@ urlpatterns = [
 ]
 
 handler404 = 'core.views.error_404'
-handler500 = 'core.views.error_500'
+#handler500 = 'core.views.error_500'
 handler413 = 'core.views.error_413'
 
 if settings.DEBUG:

@@ -223,9 +223,9 @@ def error_404(request, exception):
         data = {}
         return render(request,'404error.html', data)
 
-def error_500(request,  exception):
-        data = {}
-        return render(request,'404error.html', data)
+#def error_500(request,  exception):
+ #       data = {}
+  #      return render(request,'404error.html', data)
         
 def error_413(request,  exception):
         data = {}
