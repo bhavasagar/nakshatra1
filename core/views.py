@@ -848,14 +848,14 @@ class Other_game:
         seconds=x.seconds%60
         return minutes,seconds
 
-# gold_game = Gold_game('gold')
-# gold_game.running_game()
-# silver_game = Silver_game('silver')
-# silver_game.running_game()
-# diamond_game = Diamond_game('diamond')
-# diamond_game.running_game()
-# other_game = Other_game('other')
-# other_game.running_game()
+gold_game = Gold_game('gold')
+gold_game.running_game()
+silver_game = Silver_game('silver')
+silver_game.running_game()
+diamond_game = Diamond_game('diamond')
+diamond_game.running_game()
+other_game = Other_game('other')
+other_game.running_game()
 
 nums = [str(i) for i in range(10)]
 
@@ -863,129 +863,129 @@ class NumberSection(LoginRequiredMixin,ListView):
     template_name = "gamepage.html"        
     def get(self, *args, **kwargs):
         context = {}                
-        # gold_game.result()
-        # silver_game.result()
-        # diamond_game.result()
-        # other_game.result()
-        # gh,sh,dh,oh = NumberGame.objects.filter(mode='gold').order_by('-id'),NumberGame.objects.filter(mode='silver').order_by('-id'),NumberGame.objects.filter(mode='diamond').order_by('-id'),NumberGame.objects.filter(mode='other').order_by('-id')
-        # context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh,sh,dh,oh
-        # if gh.count()>11:
-        #     context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh[:10],sh[:10],dh[:10],oh[:10]
-        # context['gold_id'] = gold_game.game.id
-        # context['silver_id'] = silver_game.game.id
-        # context['diamond_id'] = diamond_game.game.id
-        # context['other_id'] = other_game.game.id
-        # context['gold_status'],context['silver_status'],context['diamond_status'],context['other_status'] = gold_game.status,silver_game.status,diamond_game.status,other_game.status    
-        # context["gold_minutes"],context["gold_seconds"] = gold_game.timer()
-        # context["silver_minutes"],context["silver_seconds"] = silver_game.timer()
-        # context["other_minutes"],context["other_seconds"] = other_game.timer()
-        # context["diamond_minutes"],context["diamond_seconds"] = diamond_game.timer()
+        gold_game.result()
+        silver_game.result()
+        diamond_game.result()
+        other_game.result()
+        gh,sh,dh,oh = NumberGame.objects.filter(mode='gold').order_by('-id'),NumberGame.objects.filter(mode='silver').order_by('-id'),NumberGame.objects.filter(mode='diamond').order_by('-id'),NumberGame.objects.filter(mode='other').order_by('-id')
+        context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh,sh,dh,oh
+        if gh.count()>11:
+            context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh[:10],sh[:10],dh[:10],oh[:10]
+        context['gold_id'] = gold_game.game.id
+        context['silver_id'] = silver_game.game.id
+        context['diamond_id'] = diamond_game.game.id
+        context['other_id'] = other_game.game.id
+        context['gold_status'],context['silver_status'],context['diamond_status'],context['other_status'] = gold_game.status,silver_game.status,diamond_game.status,other_game.status    
+        context["gold_minutes"],context["gold_seconds"] = gold_game.timer()
+        context["silver_minutes"],context["silver_seconds"] = silver_game.timer()
+        context["other_minutes"],context["other_seconds"] = other_game.timer()
+        context["diamond_minutes"],context["diamond_seconds"] = diamond_game.timer()
         return render(self.request,self.template_name,context=context)
 
     def post(self, *Args, **kwargs):        
-        # name = str(self.request.POST.get("choosen")).split(' ')
-        # amt = self.request.POST.get("total")
-        # amt1 = float(amt)
-        # # prfloat(amt)
-        # if float(amt) <= float(self.request.user.userprofile.total_amount):
-        #     amt = float(amt) - float(int(amt)*0.03)
-        #     if name[0] == 'Gold' and gold_game.status != "blocked":
+        name = str(self.request.POST.get("choosen")).split(' ')
+        amt = self.request.POST.get("total")
+        amt1 = float(amt)
+        # prfloat(amt)
+        if float(amt) <= float(self.request.user.userprofile.total_amount):
+            amt = float(amt) - float(int(amt)*0.03)
+            if name[0] == 'Gold' and gold_game.status != "blocked":
 
-        #         hist = History.objects.create(user=self.request.user)
-        #         hist.investment = amt
-        #         if name[1] in nums: 
-        #             hist.num_selected = name[1]
-        #         else:
-        #             hist.color_selected = name[1].lower()                                 
-        #         hist.id_made = gold_game.game.id
-        #         hist.save()
-        #         hist.paid = True                
-        #         if hist.color_selected:
-        #             if hist.color_selected == 'green':
-        #                 gold_game.game.green_investment = float(gold_game.game.green_investment)+float(amt)                    
-        #             elif hist.color_selected == 'red':
-        #                 gold_game.game.red_investment = float(gold_game.game.red_investment)+float(amt)                    
-        #             elif hist.color_selected == 'purple':
-        #                 gold_game.game.purple_investment = float(gold_game.game.purple_investment)+float(amt)
-        #         else:
-        #             index = int(hist.num_selected)-1
-        #             gold_game.game.n_investment[index] = int(gold_game.game.n_investment[index])+float(amt)
-        #         gold_game.game.save()
-        #         hist.save()
-        #         self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
-        #         self.request.user.userprofile.save()
-        #     if name[0] == 'Silver' and silver_game.status != "blocked":
-        #         hist = History.objects.create(user=self.request.user,investment=amt)
-        #         hist.id_made = silver_game.game.id
-        #         if name[1] in nums: 
-        #             hist.num_selected = name[1]                                    
-        #         else:
-        #             hist.color_selected = name[1].lower() 
-        #         hist.save()
-        #         hist.paid = True                
-        #         if hist.color_selected:
-        #             if hist.color_selected == 'green':
-        #                 silver_game.game.green_investment = float(silver_game.game.green_investment)+float(amt)                    
-        #             elif hist.color_selected == 'red':
-        #                 silver_game.game.red_investment = float(silver_game.game.red_investment)+float(amt)                    
-        #             elif hist.color_selected == 'purple':
-        #                 silver_game.game.purple_investment = float(silver_game.game.purple_investment)+float(amt)
-        #         else:
-        #             index = int(hist.num_selected)-1
-        #             silver_game.game.n_investment[index] = float(silver_game.game.n_investment[index])+float(amt)
-        #         silver_game.game.save()
-        #         hist.save()
-        #         self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
-        #         self.request.user.userprofile.save()
-        #     if name[0] == 'Diamond' and diamond_game.status != "blocked":
-        #         hist = History.objects.create(user=self.request.user,investment=amt)
-        #         hist.id_made = diamond_game.game.id
-        #         if name[1] in nums: 
-        #             hist.num_selected = name[1]
-        #         else:
-        #             hist.color_selected = name[1].lower() 
-        #         hist.save()
-        #         hist.paid = True                
-        #         if hist.color_selected:
-        #             if hist.color_selected == 'green':
-        #                 diamond_game.game.green_investment = float(diamond_game.game.green_investment)+float(amt)                    
-        #             elif hist.color_selected == 'red':
-        #                 diamond_game.game.red_investment = float(diamond_game.game.red_investment)+float(amt)                    
-        #             elif hist.color_selected == 'purple':
-        #                 diamond_game.game.purple_investment = float(diamond_game.game.purple_investment)+float(amt)
-        #         else:
-        #             index = int(hist.num_selected)-1
-        #             diamond_game.game.n_investment[index] = float(diamond_game.game.n_investment[index])+float(amt)
-        #         diamond_game.game.save()
-        #         hist.save()
-        #         self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
-        #         self.request.user.userprofile.save()
-        #     if name[0] == 'Other' and other_game.status != "blocked":
-        #         hist = History.objects.create(user=self.request.user,investment=amt,)
-        #         hist.id_made = other_game.game.id
-        #         if name[1] in nums: 
-        #             hist.num_selected = name[1]
-        #         else:
-        #             hist.color_selected = name[1].lower() 
-        #         hist.save()
-        #         hist.paid = True                
-        #         if hist.color_selected:
-        #             if hist.color_selected == 'green':
-        #                 other_game.game.green_investment = float(other_game.game.green_investment)+float(amt)                    
-        #             elif hist.color_selected == 'red':
-        #                 other_game.game.red_investment = float(other_game.game.red_investment)+float(amt)                    
-        #             elif hist.color_selected == 'purple':
-        #                 other_game.game.purple_investment = float(other_game.game.purple_investment)+float(amt)                    
-        #         else:
-        #             index = int(hist.num_selected)-1
-        #             other_game.game.n_investment[index] = float(other_game.game.n_investment[index])+float(amt)
-        #         other_game.game.save()
-        #         hist.save()
-        #         self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-float(amt1)
-        #         self.request.user.userprofile.save()
-        # else:
-        #     messages.warning(self.request,'Insufficient balance!')
-        #     messages.warning(self.request,format_html("{} <a href='/pay'>{}</a>", "To Recharge ","Click Here."))
+                hist = History.objects.create(user=self.request.user)
+                hist.investment = amt
+                if name[1] in nums: 
+                    hist.num_selected = name[1]
+                else:
+                    hist.color_selected = name[1].lower()                                 
+                hist.id_made = gold_game.game.id
+                hist.save()
+                hist.paid = True                
+                if hist.color_selected:
+                    if hist.color_selected == 'green':
+                        gold_game.game.green_investment = float(gold_game.game.green_investment)+float(amt)                    
+                    elif hist.color_selected == 'red':
+                        gold_game.game.red_investment = float(gold_game.game.red_investment)+float(amt)                    
+                    elif hist.color_selected == 'purple':
+                        gold_game.game.purple_investment = float(gold_game.game.purple_investment)+float(amt)
+                else:
+                    index = int(hist.num_selected)-1
+                    gold_game.game.n_investment[index] = int(gold_game.game.n_investment[index])+float(amt)
+                gold_game.game.save()
+                hist.save()
+                self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
+                self.request.user.userprofile.save()
+            if name[0] == 'Silver' and silver_game.status != "blocked":
+                hist = History.objects.create(user=self.request.user,investment=amt)
+                hist.id_made = silver_game.game.id
+                if name[1] in nums: 
+                    hist.num_selected = name[1]                                    
+                else:
+                    hist.color_selected = name[1].lower() 
+                hist.save()
+                hist.paid = True                
+                if hist.color_selected:
+                    if hist.color_selected == 'green':
+                        silver_game.game.green_investment = float(silver_game.game.green_investment)+float(amt)                    
+                    elif hist.color_selected == 'red':
+                        silver_game.game.red_investment = float(silver_game.game.red_investment)+float(amt)                    
+                    elif hist.color_selected == 'purple':
+                        silver_game.game.purple_investment = float(silver_game.game.purple_investment)+float(amt)
+                else:
+                    index = int(hist.num_selected)-1
+                    silver_game.game.n_investment[index] = float(silver_game.game.n_investment[index])+float(amt)
+                silver_game.game.save()
+                hist.save()
+                self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
+                self.request.user.userprofile.save()
+            if name[0] == 'Diamond' and diamond_game.status != "blocked":
+                hist = History.objects.create(user=self.request.user,investment=amt)
+                hist.id_made = diamond_game.game.id
+                if name[1] in nums: 
+                    hist.num_selected = name[1]
+                else:
+                    hist.color_selected = name[1].lower() 
+                hist.save()
+                hist.paid = True                
+                if hist.color_selected:
+                    if hist.color_selected == 'green':
+                        diamond_game.game.green_investment = float(diamond_game.game.green_investment)+float(amt)                    
+                    elif hist.color_selected == 'red':
+                        diamond_game.game.red_investment = float(diamond_game.game.red_investment)+float(amt)                    
+                    elif hist.color_selected == 'purple':
+                        diamond_game.game.purple_investment = float(diamond_game.game.purple_investment)+float(amt)
+                else:
+                    index = int(hist.num_selected)-1
+                    diamond_game.game.n_investment[index] = float(diamond_game.game.n_investment[index])+float(amt)
+                diamond_game.game.save()
+                hist.save()
+                self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-amt1
+                self.request.user.userprofile.save()
+            if name[0] == 'Other' and other_game.status != "blocked":
+                hist = History.objects.create(user=self.request.user,investment=amt,)
+                hist.id_made = other_game.game.id
+                if name[1] in nums: 
+                    hist.num_selected = name[1]
+                else:
+                    hist.color_selected = name[1].lower() 
+                hist.save()
+                hist.paid = True                
+                if hist.color_selected:
+                    if hist.color_selected == 'green':
+                        other_game.game.green_investment = float(other_game.game.green_investment)+float(amt)                    
+                    elif hist.color_selected == 'red':
+                        other_game.game.red_investment = float(other_game.game.red_investment)+float(amt)                    
+                    elif hist.color_selected == 'purple':
+                        other_game.game.purple_investment = float(other_game.game.purple_investment)+float(amt)                    
+                else:
+                    index = int(hist.num_selected)-1
+                    other_game.game.n_investment[index] = float(other_game.game.n_investment[index])+float(amt)
+                other_game.game.save()
+                hist.save()
+                self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount)-float(amt1)
+                self.request.user.userprofile.save()
+        else:
+            messages.warning(self.request,'Insufficient balance!')
+            messages.warning(self.request,format_html("{} <a href='/pay'>{}</a>", "To Recharge ","Click Here."))
         return redirect('core:play')
             
 
