@@ -14,9 +14,9 @@ AUTH_PASSWORD_VALIDATORS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'myprojectuser',
-        'PASSWORD': 'password',
+        'NAME': 'myprojectnakshatra',
+        'USER': 'myprojectnakshatrauser',
+        'PASSWORD': 'mypassword123nakshatra',
         'HOST': 'localhost',
         'PORT': '',
     }

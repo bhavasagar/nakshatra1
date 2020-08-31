@@ -7,11 +7,12 @@ ALLOWED_HOSTS = ['*','presimax.online','www.presimax.online']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'new',
-        'USER': 'postgres',
-        'PASSWORD': '1199',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myprojectnakshatra',
+        'USER': 'myprojectnakshatrauser',
+        'PASSWORD': 'mypassword123nakshatra',
         'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
