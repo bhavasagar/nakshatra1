@@ -27,96 +27,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.db.models.functions import ( ExtractDay, ExtractHour, ExtractMinute, ExtractMonth, ExtractSecond, ExtractWeek, ExtractWeekDay, ExtractYear )
 from django.utils.html import format_html
-
-
-# class HomeView(ListView):
-#     template_name = "home.html"
-#     def get(self,*args, **kwargs):
-#         items = Item.objects.all().order_by('-id')[0:7]
-#         items1 = Item.objects.all().order_by('-id')[9:16]
-#         items2 = Item.objects.filter(dis_per__gte=30)[0:7]
-#         items3 = Item.objects.filter(dis_per__gte=30).order_by('-id')[9:16]
-#         items4 = Item.objects.filter(dis_per__gte=70).order_by('-id')
-#         items7 = Item.objects.filter(tag="BESTSELLER").order_by('-id')[0:7]
-#         items6 = Item.objects.filter(tag="BESTSELLER")[9:16]
-#         items8 = Sales.objects.filter(sale_name="DOW")
-#         items11 = Sales.objects.filter(sale_name="DS")[0:7]
-#         items12 = Sales.objects.filter(sale_name="DS")[9:16]
-#         items9 = Sales.objects.filter(sale_name="DOD")
-#         items10 = Sales.objects.filter(sale_name="FO")
-#         categories = Categories.objects.all()
-#         context={'object_list':items,'object_list1':items1,'cat':categories,'object_list2':items2,'object_list3':items3,'object_list4':items4,'object_list6':items6,'object_list7':items7,'object_list8':items8,'object_list9':items9,'object_list10':items10,'object_list11':items11,'object_list12':items12}
-#         if datetime.now().strftime("%A")!="Sunday":
-#             context["status"]="disabled"
-#             context["msg"]="Wait up to SUNDAY for this sale..."
-#         now = timezone.now()
-#         if len(items10)>0:
-#             sdate = items10[0].gold_start
-#             edate = items10[0].end
-#             today = datetime.today()
-#             if sdate < now:
-#                 context["day"]=edate.day - now.day
-#                 context["hours"]=edate.hour
-#                 context["minutes"]=edate.minute
-#                 context["seconds"]=edate.second
-#                 context["fmsg"]="Ends In"
-#             else:
-#                 context["day"]=-sdate.day + now.day
-#                 context["hours"]=sdate.hour
-#                 context["minutes"]=sdate.minute
-#                 context["seconds"]=sdate.second
-#                 context["fmsg"]="gold_Starts In"
-#             if sdate > now:
-#                 context["fstatus"]="disabled"
-#         return render(self.request, self.template_name, context)
-#     def post(self,*args,**kwargs):
-#         if self.request.method == 'POST':
-#             if self.request.POST.get('search'):
-#                 query = self.request.POST.get('search')
-#                 qs = Item.objects.filter(Q(title__search=query)|Q(category__search=query)|Q(descruption__search=query))
-#                 msg = 'Search results'
-#                 context = { 'sobs': qs , 'type':msg}
-#                 if len(qs)<1:
-#                     messages.info(self.request, "Invalid search")
-#                     return redirect('/ecommerce/')
-#             else:
-#                 min_price = int(self.request.POST.get('min_price'))-int(self.request.POST.get('min_price'))*0.1
-#                 max_price = int(self.request.POST.get('max_price'))+int(self.request.POST.get('max_price'))*0.1
-#                 min_dis_per = int(self.request.POST.get('min_dis_price'))-int(self.request.POST.get('min_dis_price'))*0.1
-#                 max_dis_per = int(self.request.POST.get('max_dis_price'))+int(self.request.POST.get('max_dis_price'))*0.1
-#                 if self.request.POST.get('gold_new'):
-#                     qs = Item.objects.filter(Q(dis_per__gte=min_dis_per)&Q(tag="gold_New")&Q(dis_per__lte=max_dis_per)&Q(discount_price__gte=min_price)&Q(discount_price__lte=max_price)).order_by('-id')
-#                 if self.request.POST.get('bestseller'):
-#                     qs = Item.objects.filter(Q(dis_per__gte=min_dis_per)&Q(tag="BESTSELLER")&Q(dis_per__lte=max_dis_per)&Q(discount_price__gte=min_price)&Q(discount_price__lte=max_price)).order_by('-id')
-#                 if self.request.POST.get('bestseller') and self.request.POST.get('gold_new'):
-#                     qs = Item.objects.filter(Q(dis_per__gte=min_dis_per)&Q(tag="gold_New")&Q(tag="BESTSELLER")&Q(dis_per__lte=max_dis_per)&Q(discount_price__gte=min_price)&Q(discount_price__lte=max_price)).order_by('-id')
-#                 if not (self.request.POST.get('bestseller') and self.request.POST.get('gold_new')):
-#                     qs = Item.objects.filter(Q(dis_per__gte=min_dis_per)&Q(dis_per__lte=max_dis_per)&Q(discount_price__gte=min_price)&Q(discount_price__lte=max_price)).order_by('-id')
-#                 if len(qs)>36:
-#                     qs = qs[0:36]
-#                 msg = 'Filter results'
-#                 context = { 'sobs': qs , 'type':msg}
-#             return render(self.request, 'search.html', context=context)
             
-# class travels(ListView):
-#     model = TravelDetails
-#     template_name = "travels.html"
-#     def post(self,*args,**kwargs):
-#         if self.request.method == 'POST':
-#             travel_details = TravelDetails.objects.create(
-#                 name = self.request.POST.get('name'),
-#                 spoint = self.request.POST.get('spoint'),
-#                 epoint = self.request.POST.get('epoint'),
-#                 phonenumber = self.request.POST.get('phonenumber')
-#             )
-#             travel_details.email = self.request.POST.get('email')
-#             travel_details.carmodel = self.request.POST.get('carmodel')
-#             travel_details.carcapacity = self.request.POST.get('carcapacity')
-#             travel_details.save()
-#             messages.info(self.request,'We will contact you soon about travel details. Thank you')
-#             return redirect('core:home')
-#         return render(self.request,self.template_name)
-
 
 def refgenrator(name):
     l=random.choices(string.ascii_lowercase+string.ascii_uppercase,k=6)
@@ -229,7 +140,89 @@ def error_404(request, exception):
         
 def error_413(request,  exception):
         data = {}
-        return render(request,'404error.html', data)        
+        return render(request,'404error.html', data)  
+        
+
+@login_required
+def payment(request):
+    if request.method == "GET":
+        return render(request, 'payments.html')
+    if request.method == "POST":
+        try:
+            amt = request.POST.get('amt')
+            if not float(amt)>100:
+                messages.info(request,'Amount should be greater than Rs.100')    
+                return render(request, 'payments.html')
+        except:
+            messages.info(request,'Enter Valid amount')
+            return render(request, 'payments.html')
+        transaction = Transaction.objects.create(made_by=request.user, amount=amt)
+        transaction.save()
+        merchant_key = settings.PAYTM_SECRET_KEY
+
+        params = (
+            ('MID', settings.PAYTM_MERCHANT_ID),
+            ('ORDER_ID', str(transaction.order_id)),
+            ('CUST_ID', str(transaction.made_by.email)),
+            ('TXN_AMOUNT', str(transaction.amount)),
+            ('CHANNEL_ID', settings.PAYTM_CHANNEL_ID),
+            ('WEBSITE', settings.PAYTM_WEBSITE),
+            # ('EMAIL', request.user.email),
+            # ('MOBILE_N0', '9911223388'),
+            ('INDUSTRY_TYPE_ID', settings.PAYTM_INDUSTRY_TYPE_ID),
+            ('CALLBACK_URL', 'http://localhost:8000/callback/'),
+            ('MERC_UNQ_REF', str(request.user.id)),
+            # ('PAYMENT_MODE_ONLY', 'NO'),
+        )
+
+        paytm_params = dict(params)
+        checksum = generate_checksum(paytm_params, merchant_key)
+
+        transaction.checksum = checksum
+        transaction.save()
+
+        paytm_params['CHECKSUMHASH'] = checksum
+        print('SENT: ', checksum)
+        return render(request, 'redirect.html', context=paytm_params)
+
+@csrf_exempt
+def callback(request):
+    if request.method == "POST":
+        user = request.user
+        MERCHANT_KEY = settings.PAYTM_SECRET_KEY
+        data_dict = {}
+        data_dict = dict(request.POST.items())
+
+        verify = verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])            
+        if verify:
+            for key in request.POST:                                                                      
+                if key == "BANKTXNID" or key == "RESPCODE":
+                    if request.POST[key]:
+                        data_dict[key] = int(request.POST[key])
+                    else:
+                        data_dict[key] = 0
+                elif key == "TXNAMOUNT":
+                    data_dict[key] = float(request.POST[key])
+            Paytm_history.objects.create(user_id = data_dict['MERC_UNQ_REF'], **data_dict)
+            cust = User.objects.get(id=data_dict['MERC_UNQ_REF'])
+            up = UserProfile.objects.get(user=cust)                     
+            return render(request, "callback.html", {"paytm":data_dict})
+            if not data_dict['STATUS'] == 'TXN_SUCCESS':                                
+                up.total_amount = float(up.total_amount) + float(data_dict['TXNAMOUNT'])
+                up.save()
+        else:
+            return HttpResponse("checksum verify failed")
+    return HttpResponse(status=200)
+
+	
+def signup(self, request, user):   	    				    
+    user.first_name = self.cleaned_data['first_name']
+    user.last_name = self.cleaned_data['last_name'] 
+    user.save()     
+    return user     
+
+def index(request):
+    return render(request,'index.html')      
 
 def create_time_modules(add_delta = 0):                
     delta = timedelta(seconds=add_delta)
@@ -380,7 +373,7 @@ class Gold_game:
                                 up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
                                 up.save()
 
-        if self.rest and self.game.result != 'unknown':
+        if self.rest and self.game.result!="unknown":
             if self.new<=datetime.now():
                 self.created = False
                 # print('back')
@@ -391,495 +384,40 @@ class Gold_game:
         minutes=(x.seconds//60)%60
         seconds=x.seconds%60
         return minutes,seconds
-
-class Silver_game:
-    def __init__(self,name,delta=0):
-        self.name = name
-        self.delta = delta    
-
-    def running_game(self,repeat=1):                        
-        self.end,self.buffer,self.new,self.correct,self.start = create_time_modules(add_delta=self.delta)
-        # self.status = True
-        self.game = NumberGame.objects.create(mode=self.name)    
-        self.game.n_investment = [str(0) for i in range(10)]    
-        self.status = 'accepted'
-        self.created =True
-        self.rest = False
-        self.game.save()
-        
-    def result(self):
-
-        if self.created:          
-            if self.end<=datetime.now() and self.new >datetime.now():
-                self.rest = False
-                self.status = 'blocked'            
-        if not self.rest:
-            if self.buffer<=datetime.now():
-                self.rest = True
-                investment = []
-                tp,tr,tg=[],[],[]
-                colors = []
-                res=[]
-                # tp.append(int(self.game.purple_investment))
-                # tr.append(int(self.game.red_investment))
-                # tg.append(int(self.game.green_investment))
-                colors.append(float(self.game.red_investment))
-                colors.append(float(self.game.purple_investment))
-                colors.append(float(self.game.green_investment))
-                investment=self.game.n_investment
-                tr=[float(investment[i]) for i in range(len(investment)) if float(i)%2==0]
-                tp=[float(investment[i]) for i in range(len(investment)) if float(i)==0 or float(i)==5]
-                tg=[float(investment[i]) for i in range(len(investment)) if float(i)%2!=0]
-                total = 0
-                for i in colors:
-                    total+=i
-                for i in investment:
-                    total+=float(i)
-                self.game.total_investment = round(float(total),2)
-                self.game.save()
-                if tr.index(min(tr)) != 0:
-                    a1 = min(tr)*7 + colors[0]*2
-                else:
-                    a1 = min(tr)*7 + colors[0]*1.5 + colors[1]*4.5
-
-                res.append(a1)    
-
-                if tg.index(min(tg)) != 2:
-                    a1 = min(tg)*7 + colors[2]*2
-                else:
-                    a1 = min(tg)*7 + colors[2]*1.5 + colors[1]*4.5
-
-                res.append(a1)                                       
-
-                index_res = res.index(min(res))
-
-                if index_res == 0:
-                    result = tr.index(min(tr))*2
-                    color = 'red'
-                    if tr.index(min(tr)) != 0:
-                        color = 'red purple'
-                else:
-                    result = tg.index(min(tg))*2+1
-                    color = 'green'
-                    if tg.index(min(tg)) != 2:
-                        color = 'green purple'                
-                
-                if self.game.result == 'unknown':
-                    self.game.result = str(result)        
-                    self.game.color = color        
-                    self.game.save()                
-
-                hists = History.objects.filter(id_made=self.game.id,paid=True)
-                clrlst = self.game.color.split(' ')
-                while True:
-                    if '' in clrlst:
-                        clrlst.remove('')
-                    elif ' ' in clrlst:
-                        clrlst.remove(' ')
-                    else:
-                        break
-                for i in hists:
-                    if i.color_selected:
-                        if i.color_selected in clrlst and self.game.color != 'purple':
-                            if self.game.result == '0' or self.game.result == '5':
-                                i.user.won = float(investment*1.5)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                            else:
-                                i.user.won = float(investment*2)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                        elif i.color_selected in clrlst and self.game.color == 'purple':
-                            i.user.won = float(investment*4.5)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-                    if i.num_selected:
-                        if i.num_selected == self.game.result:
-                            i.user.won = float(investment*7)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-        if self.rest and self.game.result != 'unknown':
-            if self.new<=datetime.now():
-                self.created = False
-                # print('back')
-                return self.running_game()
-                    
-    def timer(self):
-        x = self.correct - datetime.now()          
-        minutes=(x.seconds//60)%60
-        seconds=x.seconds%60
-        return minutes,seconds
-
-class Diamond_game:
-    def __init__(self,name,delta=0):
-        self.name = name
-        self.delta = delta    
-
-    def running_game(self,repeat=1):                        
-        self.end,self.buffer,self.new,self.correct,self.start = create_time_modules(add_delta=self.delta)
-        # self.status = True
-        self.game = NumberGame.objects.create(mode=self.name)    
-        self.game.n_investment = [str(0) for i in range(10)]    
-        self.status = 'accepted'
-        self.created =True
-        self.rest = False
-        self.game.save()
-        
-    def result(self):
-
-        if self.created:          
-            if self.end<=datetime.now() and self.new >datetime.now():
-                self.rest = False
-                self.status = 'blocked'            
-        if not self.rest:
-            if self.buffer<=datetime.now():
-                self.rest = True
-                investment = []
-                tp,tr,tg=[],[],[]
-                colors = []
-                res=[]
-                # tp.append(int(self.game.purple_investment))
-                # tr.append(int(self.game.red_investment))
-                # tg.append(int(self.game.green_investment))
-                colors.append(float(self.game.red_investment))
-                colors.append(float(self.game.purple_investment))
-                colors.append(float(self.game.green_investment))
-                investment=self.game.n_investment
-                tr=[float(investment[i]) for i in range(len(investment)) if float(i)%2==0]
-                tp=[float(investment[i]) for i in range(len(investment)) if float(i)==0 or float(i)==5]
-                tg=[float(investment[i]) for i in range(len(investment)) if float(i)%2!=0]
-                total = 0
-                for i in colors:
-                    total+=i
-                for i in investment:
-                    total+=float(i)
-                self.game.total_investment = round(float(total),2)
-                self.game.save()
-                if tr.index(min(tr)) != 0:
-                    a1 = min(tr)*7 + colors[0]*2
-                else:
-                    a1 = min(tr)*7 + colors[0]*1.5 + colors[1]*4.5
-
-                res.append(a1)    
-
-                if tg.index(min(tg)) != 2:
-                    a1 = min(tg)*7 + colors[2]*2
-                else:
-                    a1 = min(tg)*7 + colors[2]*1.5 + colors[1]*4.5
-
-                res.append(a1)                                       
-
-                index_res = res.index(min(res))
-
-                if index_res == 0:
-                    result = tr.index(min(tr))*2
-                    color = 'red'
-                    if tr.index(min(tr)) != 0:
-                        color = 'red purple'
-                else:
-                    result = tg.index(min(tg))*2+1
-                    color = 'green'
-                    if tg.index(min(tg)) != 2:
-                        color = 'green purple'                
-                
-                if self.game.result == 'unknown':
-                    self.game.result = str(result)        
-                    self.game.color = color        
-                    self.game.save()                
-
-                hists = History.objects.filter(id_made=self.game.id,paid=True)
-                clrlst = self.game.color.split(' ')
-                while True:
-                    if '' in clrlst:
-                        clrlst.remove('')
-                    elif ' ' in clrlst:
-                        clrlst.remove(' ')
-                    else:
-                        break
-                for i in hists:
-                    if i.color_selected:
-                        if i.color_selected in clrlst and self.game.color != 'purple':
-                            if self.game.result == '0' or self.game.result == '5':
-                                i.user.won = float(investment*1.5)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                            else:
-                                i.user.won = float(investment*2)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                        elif i.color_selected in clrlst and self.game.color == 'purple':
-                            i.user.won = float(investment*4.5)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-                    if i.num_selected:
-                        if i.num_selected == self.game.result:
-                            i.user.won = float(investment*7)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-        if self.rest and self.game.result != 'unknown':
-            if self.new<=datetime.now():
-                self.created = False
-                # print('back')
-                return self.running_game()
-                    
-    def timer(self):
-        x = self.correct - datetime.now()          
-        minutes=(x.seconds//60)%60
-        seconds=x.seconds%60
-        return minutes,seconds
-
-class Other_game:
-    def __init__(self,name,delta=0):
-        self.name = name
-        self.delta = delta    
-
-    def running_game(self,repeat=1):                        
-        self.end,self.buffer,self.new,self.correct,self.start = create_time_modules(add_delta=self.delta)
-        # self.status = True
-        self.game = NumberGame.objects.create(mode=self.name)    
-        self.game.n_investment = [str(0) for i in range(10)]    
-        self.status = 'accepted'
-        self.created =True
-        self.rest = False
-        self.game.save()
-        
-    def result(self):
-
-        if self.created:          
-            if self.end<=datetime.now() and self.new >datetime.now():
-                self.rest = False
-                self.status = 'blocked'            
-        if not self.rest:
-            if self.buffer<=datetime.now():
-                self.rest = True
-                investment = []
-                tp,tr,tg=[],[],[]
-                colors = []
-                res=[]
-                # tp.append(int(self.game.purple_investment))
-                # tr.append(int(self.game.red_investment))
-                # tg.append(int(self.game.green_investment))
-                colors.append(float(self.game.red_investment))
-                colors.append(float(self.game.purple_investment))
-                colors.append(float(self.game.green_investment))
-                investment=self.game.n_investment
-                tr=[float(investment[i]) for i in range(len(investment)) if float(i)%2==0]
-                tp=[float(investment[i]) for i in range(len(investment)) if float(i)==0 or float(i)==5]
-                tg=[float(investment[i]) for i in range(len(investment)) if float(i)%2!=0]
-                total = 0
-                for i in colors:
-                    total+=i
-                for i in investment:
-                    total+=float(i)
-                self.game.total_investment = round(float(total),2)
-                self.game.save()
-                if tr.index(min(tr)) != 0:
-                    a1 = min(tr)*7 + colors[0]*2
-                else:
-                    a1 = min(tr)*7 + colors[0]*1.5 + colors[1]*4.5
-
-                res.append(a1)    
-
-                if tg.index(min(tg)) != 2:
-                    a1 = min(tg)*7 + colors[2]*2
-                else:
-                    a1 = min(tg)*7 + colors[2]*1.5 + colors[1]*4.5
-
-                res.append(a1)                                       
-
-                index_res = res.index(min(res))
-
-                if index_res == 0:
-                    result = tr.index(min(tr))*2
-                    color = 'red'
-                    if tr.index(min(tr)) != 0:
-                        color = 'red purple'
-                else:
-                    result = tg.index(min(tg))*2+1
-                    color = 'green'
-                    if tg.index(min(tg)) != 2:
-                        color = 'green purple'                
-                
-                if self.game.result == 'unknown':
-                    self.game.result = str(result)        
-                    self.game.color = color        
-                    self.game.save()                
-
-                hists = History.objects.filter(id_made=self.game.id,paid=True)
-                clrlst = self.game.color.split(' ')
-                while True:
-                    if '' in clrlst:
-                        clrlst.remove('')
-                    elif ' ' in clrlst:
-                        clrlst.remove(' ')
-                    else:
-                        break
-                for i in hists:
-                    if i.color_selected:
-                        if i.color_selected in clrlst and self.game.color != 'purple':
-                            if self.game.result == '0' or self.game.result == '5':
-                                i.user.won = float(investment*1.5)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                            else:
-                                i.user.won = float(investment*2)
-                                i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                                i.paid = True
-                                i.user.save()
-                                i.save()
-                                if i.user.refer != "False":
-                                    u = User.objects.get(username=i.user.refer)
-                                    up = UserProfile.objects.get(user=u)
-                                    up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                    up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                    up.save()
-                        elif i.color_selected in clrlst and self.game.color == 'purple':
-                            i.user.won = float(investment*4.5)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-                    if i.num_selected:
-                        if i.num_selected == self.game.result:
-                            i.user.won = float(investment*7)
-                            i.user.total_amount = float(i.user.total_amount) + float(i.user.won)+float(investment)
-                            i.paid = True
-                            i.user.save()
-                            i.save()
-                            if i.user.refer != "False":
-                                u = User.objects.get(username=i.user.refer)
-                                up = UserProfile.objects.get(user=u)
-                                up.refer_income = float(up.refer_income) + float(float(i.user.won)*0.75)
-                                up.total_amount = float(up.total_amount)+float(float(i.user.won)*0.75)
-                                up.save()
-
-        if self.rest and self.game.result != 'unknown':
-            if self.new<=datetime.now():
-                self.created = False
-                # print('back')
-                return self.running_game()
-                    
-    def timer(self):
-        x = self.correct - datetime.now()          
-        minutes=(x.seconds//60)%60
-        seconds=x.seconds%60
-        return minutes,seconds
-
-gold_game = Gold_game('gold')
-gold_game.running_game()
-silver_game = Silver_game('silver')
-silver_game.running_game()
-diamond_game = Diamond_game('diamond')
-diamond_game.running_game()
-other_game = Other_game('other')
-other_game.running_game()
 
 nums = [str(i) for i in range(10)]
 
 class NumberSection(LoginRequiredMixin,ListView):
     template_name = "gamepage.html"        
     def get(self, *args, **kwargs):
-        context = {}                
-        gold_game.result()
-        silver_game.result()
-        diamond_game.result()
-        other_game.result()
-        gh,sh,dh,oh = NumberGame.objects.filter(mode='gold').order_by('-id'),NumberGame.objects.filter(mode='silver').order_by('-id'),NumberGame.objects.filter(mode='diamond').order_by('-id'),NumberGame.objects.filter(mode='other').order_by('-id')
-        context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh,sh,dh,oh
-        if gh.count()>11:
-            context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh[:10],sh[:10],dh[:10],oh[:10]
-        context['gold_id'] = gold_game.game.id
-        context['silver_id'] = silver_game.game.id
-        context['diamond_id'] = diamond_game.game.id
-        context['other_id'] = other_game.game.id
-        context['gold_status'],context['silver_status'],context['diamond_status'],context['other_status'] = gold_game.status,silver_game.status,diamond_game.status,other_game.status    
-        context["gold_minutes"],context["gold_seconds"] = gold_game.timer()
-        context["silver_minutes"],context["silver_seconds"] = silver_game.timer()
-        context["other_minutes"],context["other_seconds"] = other_game.timer()
-        context["diamond_minutes"],context["diamond_seconds"] = diamond_game.timer()
+        context = {}
+        try:
+            if gold_game.status or gold_game.rest:                
+                gold_game.result()
+                context['gold_id'] = gold_game.game.id
+                context["gold_minutes"],context["gold_seconds"] = gold_game.timer()
+                context['gold_status'] = gold_game.status
+            if silver_game.status or silver_game.rest:
+                silver_game.result()
+                context['silver_id'] = silver_game.game.id
+                context['silver_status'] = silver_game.status
+                context["silver_minutes"],context["silver_seconds"] = silver_game.timer()
+            if diamond_game.status or diamond_game.rest:
+                diamond_game.result()
+                context['diamond_id'] = diamond_game.game.id
+                context['diamond_status'] = diamond_game.status
+                context["diamond_minutes"],context["diamond_seconds"] = diamond_game.timer()
+            if other_game.status or other_game.rest:
+                context["other_minutes"],context["other_seconds"] = other_game.timer()
+                other_game.result()
+                context['other_id'] = other_game.game.id
+                context['other_status'] = other_game.status           
+            gh,sh,dh,oh = NumberGame.objects.filter(mode='gold').order_by('-id'),NumberGame.objects.filter(mode='silver').order_by('-id'),NumberGame.objects.filter(mode='diamond').order_by('-id'),NumberGame.objects.filter(mode='other').order_by('-id')
+            context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh,sh,dh,oh
+            if gh.count()>11:
+                context['gold_history'],context['silver_history'],context['diamond_history'],context['other_history']=gh[:10],sh[:10],dh[:10],oh[:10]         
+        except:
+            pass                                                                    
         return render(self.request,self.template_name,context=context)
 
     def post(self, *Args, **kwargs):        
@@ -989,85 +527,15 @@ class NumberSection(LoginRequiredMixin,ListView):
         return redirect('core:play')
             
 
-@login_required
-def payment(request):
-    if request.method == "GET":
-        return render(request, 'payments.html')
-    if request.method == "POST":
-        try:
-            amt = request.POST.get('amt')
-            if not float(amt)>100:
-                messages.info(request,'Amount should be greater than Rs.100')    
-                return render(request, 'payments.html')
-        except:
-            messages.info(request,'Enter Valid amount')
-            return render(request, 'payments.html')
-        transaction = Transaction.objects.create(made_by=request.user, amount=amt)
-        transaction.save()
-        merchant_key = settings.PAYTM_SECRET_KEY
 
-        params = (
-            ('MID', settings.PAYTM_MERCHANT_ID),
-            ('ORDER_ID', str(transaction.order_id)),
-            ('CUST_ID', str(transaction.made_by.email)),
-            ('TXN_AMOUNT', str(transaction.amount)),
-            ('CHANNEL_ID', settings.PAYTM_CHANNEL_ID),
-            ('WEBSITE', settings.PAYTM_WEBSITE),
-            # ('EMAIL', request.user.email),
-            # ('MOBILE_N0', '9911223388'),
-            ('INDUSTRY_TYPE_ID', settings.PAYTM_INDUSTRY_TYPE_ID),
-            ('CALLBACK_URL', 'http://localhost:8000/callback/'),
-            ('MERC_UNQ_REF', str(request.user.id)),
-            # ('PAYMENT_MODE_ONLY', 'NO'),
-        )
-
-        paytm_params = dict(params)
-        checksum = generate_checksum(paytm_params, merchant_key)
-
-        transaction.checksum = checksum
-        transaction.save()
-
-        paytm_params['CHECKSUMHASH'] = checksum
-        print('SENT: ', checksum)
-        return render(request, 'redirect.html', context=paytm_params)
-
-@csrf_exempt
-def callback(request):
-    if request.method == "POST":
-        user = request.user
-        MERCHANT_KEY = settings.PAYTM_SECRET_KEY
-        data_dict = {}
-        data_dict = dict(request.POST.items())
-
-        verify = verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])             #verifing checksum
-        if verify:
-            for key in request.POST:                                                                      #converting string to float
-                if key == "BANKTXNID" or key == "RESPCODE":
-                    if request.POST[key]:
-                        data_dict[key] = int(request.POST[key])
-                    else:
-                        data_dict[key] = 0
-                elif key == "TXNAMOUNT":
-                    data_dict[key] = float(request.POST[key])
-            Paytm_history.objects.create(user_id = data_dict['MERC_UNQ_REF'], **data_dict)
-            cust = User.objects.get(id=data_dict['MERC_UNQ_REF'])
-            up = UserProfile.objects.get(user=cust)                     
-            return render(request, "callback.html", {"paytm":data_dict})
-            if not data_dict['STATUS'] == 'TXN_SUCCESS':                                
-                up.total_amount = float(up.total_amount) + float(data_dict['TXNAMOUNT'])
-                up.save()
-        else:
-            return HttpResponse("checksum verify failed")
-    return HttpResponse(status=200)
-
-	
-def signup(self, request, user): 	
-    # url = self.request.get_full_path()
-    # lst = url.split("/")[-1]    	    				    
-    user.first_name = self.cleaned_data['first_name']
-    user.last_name = self.cleaned_data['last_name'] 
-    user.save()     
-    return user     
-
-def index(request):
-    return render(request,'index.html')
+#if __name__=="__main__":
+gold_game = Gold_game('gold')
+gold_game.running_game()
+silver_game = Gold_game('silver')
+silver_game.running_game()
+diamond_game = Gold_game('diamond')
+diamond_game.running_game()
+other_game = Gold_game('other')
+other_game.running_game()
+ 
+    

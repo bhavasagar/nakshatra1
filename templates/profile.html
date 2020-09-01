@@ -134,7 +134,7 @@ a{
   <div class="inside">
     <div class="profile_heading">  
       <div class="profilepic">
-        {% if  request.user.userprofile.userphoto.url %}
+        {% if  request.user.userprofile.userphoto %}
           <img class="img" src="{{request.user.userprofile.userphoto.url}}">
         {% endif %}
       </div>

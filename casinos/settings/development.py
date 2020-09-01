@@ -2,7 +2,7 @@ from .base import *
 import os
 
 DEBUG = True
-ALLOWED_HOSTS = ['*','presimax.online','www.presimax.online']
+ALLOWED_HOSTS = ['*']
 
 
 DATABASES = {
