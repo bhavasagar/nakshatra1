@@ -95,13 +95,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'bhavasagarputta09@gmail.com'
+EMAIL_HOST_USER = 'nakshatra.fun@gmail.com'
 
-DEFAULT_FROM_EMAIL = 'bhavasagarputta09@gmail.com'
+DEFAULT_FROM_EMAIL = 'nakshatra.fun@gmail.com'
 
-SERVER_EMAIL = 'bhavasagarputta09@gmail.com'
+SERVER_EMAIL = 'nakshatra.fun@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'agar.9154792300'
+EMAIL_HOST_PASSWORD = 'ganesh@123'
 
 ACCOUNT_FORMS = { 
 'signup': 'core.forms.CustomSignupForm', 

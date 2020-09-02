@@ -1,274 +1,107 @@
-{% extends "base.html" %}
-{%load static%}
-{% block head_title %}Nakshatra{% endblock %}
-{% block extra_head %}
-<style>
-.carousel {
-  background:#007aeb;
-}
+{% load static %}
 
-.carousel-item .img-fluid {
-  width:100%;
-}
-
-.carousel-item a {
-  display: block;
-  width:100%;
-}
-@media (max-width:767px) {
-.carousel-item a {
-height:180px;
-}
-.carousel-item .img-fluid {
-  height:180px;
-}
-}
-#inline,#inline1,#inline2{
-display:inline-block;
-}
-.sizh:hover{
-font-size:30px;
-color:black;
-}
-body {
-  text-align: center;
-  background: #fcfcfa;
-  color: #818078;
-  font-family: Futura, sans-serif;
-}
-
-
-.hr-text{
-  position: relative;
-  ouline: 0;
-  border: 0;
-  height: 1.5em;
-}
-.hr-text:before{
-  content: '';
-  position: absolute;
-  background: green;
-  left: 0;
-  top: 50%;
-  width: 100%;
-  height: 1px;
-}
-.hr-text:after{
-  content: attr(data-content);
-  position: relative;
-  display: inline-block;
-  color: black;
-  padding: 0 2em;
-  line-height: 1.5em;
-  color: #818078;
-  background-color: #fcfcfa;
-}
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Fondamento&display=swap" rel="stylesheet"> 
-<style>
-.img-responsive{
-min-height:360px;
-width: 100% !important;
-height: auto;
-object-fit: scale-down !important;
-}
-.mycard{
-width:auto;
-height:520px !important;
-} 
-.caption
-{
-text-align:center;
-color:#373c3d;
-opacity:0.8;
-font-weight:1000;
-font-family: 'Fondamento', cursive;
-margin-top:3px;
-}
-.cat{
-width:100px;
-height:100px;
-border-radius:50% !important;
-}
-.scrolling-wrapper{
-	overflow-x: auto;
-   margin-top:-30px;
-   padding:10px;
-}
- .colx > .caption
-{
-color:#373c3d !important;
-text-transform: capitalize !important;
-opacity:1;
-font-weight:1000;
-font-family: 'Fondamento', cursive;
-}
-@media only screen and (max-width: 1000px) {
-
-  .page-link{
-      font-weight:1000;
-      font-size:3em !important;
-  }
-
-  body{
-  background-color:#f0f0f0 !important;
-  }
-  .img-responsive{
-object-fit: scale-down !important;
-}
- .colx > .caption
-{
-text-align:center !important;
-margin-left:-2px;
-color:#373c3d;
-text-transform: capitalize !important;
-opacity:1;
-font-weight:1000;
-font-family: 'Fondamento', cursive;
-font-size:0.765em !important;
-margin-top:3px;
-}
-.c1{
-  width:120px;
-  height:120px;
-  color:#f0f;
-  background-color: #000 !important;
-  transition: all 0.2s ease-in-out !important;
-  text-align: center;
-  margin-right:-15px !important;
-  }
-  
-.cat{
-width:79px;
-height:79px;
-border-radius:50% !important;
-margin-left:-15px !important;
-}
-}
-.gradient_line{ 
-    margin: 0 0 50px 0;
-    display: block;
-    border: none;
-    height: 1px;
-    background: #0071B9;
-    background: linear-gradient(to right, white, #0071B9, #26ABFF, #0071B9, white);
-}
-</style>
-{% endblock extra_head%}
-
-{% block content %}
-<style>
-  #home{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nakshatra</title>
+    <style>
+        h5 {
+            display: inline-block;
+            padding: 10px;
+            background: #B9121B;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        
+        .full-screen {
+            background-size: cover ;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+        }        
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fondamento&display=swap" rel="stylesheet"> 
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="p-1">
+    <style>
+    #home{
     color:  darkorange !important;    
-  }
-</style>
-<div id="carousel" class="carousel slide carousel-fade" data-ride="carousel" data-interval="6000">
-  <ol class="carousel-indicators">
-      <li data-target="#carousel" data-slide-to="0" class="active"></li>
-      {% for item in citems %}
-      <li data-target="#carousel" data-slide-to="{{ forloop.counter }}"></li>
-      {% endfor %}
-  </ol>
-  <div class="carousel-inner" role="listbox">
-      <div class="carousel-item active">
-          <a href="{{ item.urlfield }}">
-               <picture>
-                <source srcset="{{ item.image.url }}" media="(min-width: 1400px)">
-                <source srcset="{{ item.image.url }}" media="(min-width: 769px)">
-                 <source srcset="{{ item.image.url }}" media="(min-width: 577px)">
-                <img srcset="{{ item.image.url }}" alt="responsive image" class="d-block img-fluid">
-              </picture>
-
-              <div class="carousel-caption">
-                  <div>
-                      <h2>{{ item.heading }}</h2>
-                      <p>{{ item.description }}</p>
-                  </div>
+  }  
+    </style>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" style="float:right;width:max-content;z-index:50;" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>        
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="margin-bottom:22%">  
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          {% for i in carousals %}
+          <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter }}"></li>          
+          {% endfor %}
+        </ol>  
+        <div class="carousel-inner">
+          <div class="carousel-item">
+            <img class="d-block w-100" src="{{ c.image.url }}" data-color="lightblue" alt="First Image">
+            <div class="carousel-caption d-md-block">
+              <a href="{{ c.urlfield }}"><h5>{{c.heading}}</h5></a>
+            </div>
+          </div>
+          {% for ca in carousals %}          
+            <div class="carousel-item">
+              <img class="d-block w-100" src="{{ ca.image.url }}" data-color="lightblue" alt="First Image">
+              <div class="carousel-caption d-md-block">
+                <a href="{{ ca.urlfield }}"><h5>{{c.heading}}</h5></a>
               </div>
-          </a>
-      </div>      
-      {% for item1 in citems %}
-      <div class="carousel-item">
-          <a href="{{ item1.urlfield }}">
-               <picture>
-                <source srcset="{{ item1.image.url }}" media="(min-width: 1400px)">
-                <source srcset="{{ item1.iamge.url }}" media="(min-width: 769px)">
-                 <source srcset="{{ item1.image.url }}" media="(min-width: 577px)">
-                <img srcset="{{ item1.image.url }}" alt="responsive image" class="d-block img-fluid">
-              </picture>
-
-              <div class="carousel-caption justify-content-center align-items-center">
-                  <div>
-                      <h2>{{ item1.heading }}</h2>
-                      <p>{{ item1.description }}</p>
-                  </div>
-              </div>
-          </a>
-      </div>
-      {% endfor %}
-  </div>  
-  <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+            </div>          
+          {% endfor %}                  
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+      </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="sr-only">Next</span>
-  </a>
-</div>
-<div class="container-fluid">  
-  
-  <section class="text-center mb-4" style="margin-top:15px">
-
-    <div class="row wow fadeIn">
-
-      {% for item in object_list %}
-      <div class="col-lg-3 col-md-6 mb-4">
-
-        <div class="card mycard rounded">
-
-          <div class="view overlay" style="padding:2px">
-            <img  src="{{ item.image.url }}" class="card-img-top img-responsive rounded">
-            <a href="{{ item.get_absolute_url }}">
-              <div class="mask rgba-white-slight"></div>
-            </a>
-          </div>
-
-          <div class="card-body text-center">
-            <a href="" class="grey-text">
-              <h5>{{ item.get_category_display }}</h5>
-            </a>
-            <h5>
-              <strong>
-                <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title|truncatechars:10 }}
-                  <span class="badge badge-pill {{ item.get_label_display }}-color">{{item.tag}}</span>
-                </a>
-              </strong>
-            </h5>
-
-            <h4 class="font-weight-bold blue-text">
-              <strong>                                          
-                Rs. {{ item.price }}              
-              </strong>
-            </h4>
-
-          </div>
-
-        </div>
-
-      </div>
-      {% endfor %}
-    </div>
-
-  </section>
-  
-   
-  <center>
-</div>
-{% endblock content %}
-
-{% block extra_scripts %}
+      </a>
+      </div>      
+      {% include "scripts.html" %}
+</body>
 <script>
-  
-</script>
-{% endblock extra_scripts %}
+    var $item = $('.carousel-item'); 
+    var $wHeight = $(window).height();
+    $item.eq(0).addClass('active');
+    $item.height($wHeight); 
+    $item.addClass('full-screen');
+    
+    $('.carousel img').each(function() {
+      var $src = $(this).attr('src');
+      var $color = $(this).attr('data-color');
+      $(this).parent().css({
+        'background-image' : 'url(' + $src + ')',
+        'background-color' : $color
+      });
+      $(this).remove();
+    });
+    
+    $(window).on('resize', function (){
+      $wHeight = $(window).height();
+      $item.height($wHeight);
+    });
+    
+    $('.carousel').carousel({
+      interval: 6000,
+      pause: "false"
+    });
+    </script>
+</html>

@@ -39,11 +39,11 @@ class History(models.Model):
     num_selected = models.CharField(max_length=10,null=True,blank=True)
     paid = models.BooleanField(default=False)
     result = models.CharField(max_length=10,default="unknown",null=True,blank=True)
-
+    mode = models.CharField(max_length=10,default="unknown",null=True,blank=True)
     def __str__(self):
-        return self.user.user.username      
+        return self.user.username      
 
-class NumberGame(models.Model):    
+class GoldGame(models.Model):    
     mode = models.CharField(max_length=10,null=True, blank=True)
     total_investment = models.CharField(max_length=10,default='0',null=True,blank=True)    
     green_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
@@ -52,9 +52,48 @@ class NumberGame(models.Model):
     n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
     result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
     color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-
+    id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
     def __str__(self):
         return self.mode 
+        
+class SilverGame(models.Model):    
+    mode = models.CharField(max_length=10,null=True, blank=True)
+    total_investment = models.CharField(max_length=10,default='0',null=True,blank=True)    
+    green_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    red_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)
+    purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
+    result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    def __str__(self):
+        return self.mode 
+
+class DiamondGame(models.Model):    
+    mode = models.CharField(max_length=10,null=True, blank=True)
+    total_investment = models.CharField(max_length=10,default='0',null=True,blank=True)    
+    green_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    red_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)
+    purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
+    result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    def __str__(self):
+        return self.mode 
+
+class OtherGame(models.Model):    
+    mode = models.CharField(max_length=10,null=True, blank=True)
+    total_investment = models.CharField(max_length=10,default='0',null=True,blank=True)    
+    green_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    red_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)
+    purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
+    n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
+    result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    def __str__(self):
+        return self.mode                     
 
 class Transaction(models.Model):
     made_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='transactions', 

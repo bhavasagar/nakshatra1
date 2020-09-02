@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile, Transaction, TravelDetails, Paytm_history, Paytm_order_history, ClubJoin, Carousal, Sizes_class, Reviews, Team, Ads, Itemimage, Itemdealer, Myorder, Sales, Categories, Extrasales, CarousalClub, ReviewsImage, Contact, FAQs
 
-from .models import History, UserProfile, Transaction, Paytm_history, NumberGame, withdraw_requests, Carousal, Contact
+from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Carousal, Contact
 
 # def make_refund_accepted(modeladmin, request, queryset):
 #     queryset.update(refund_requested=False, refund_granted=True)
@@ -94,7 +94,10 @@ admin.site.register(withdraw_requests)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Transaction)
 admin.site.register(History)
-admin.site.register(NumberGame)
+admin.site.register(GoldGame)
+admin.site.register(SilverGame)
+admin.site.register(DiamondGame)
+admin.site.register(OtherGame)
 admin.site.register(Paytm_history)
 admin.site.register(Carousal)
 # admin.site.register(Carousals)
