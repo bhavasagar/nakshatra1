@@ -8,9 +8,9 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myprojectnakshatra',
-        'USER': 'myprojectnakshatrauser',
-        'PASSWORD': 'mypassword123nakshatra',
+        'NAME': 'nak',
+        'USER': 'nak',
+        'PASSWORD': 'nak',
         'HOST': 'localhost',
         'PORT': '',
     }

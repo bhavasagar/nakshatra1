@@ -10,26 +10,27 @@ from .views import (
     NumberSection,
     index,
     callback,
-    payment,
-    #starter,
+    payment,    
+    rules,
+    paid,
+    home,
 )
 
 app_name = 'core'
 
 urlpatterns = [
-    path('play/', NumberSection.as_view(), name='play'),
-    #path('starter/', starter, name='starter'),
+    path('play/', NumberSection.as_view(), name='play'),    
     path(r'signup/<slug>', SignupView.as_view(), name="signup" ),    
     path('callback/', callback, name='callback'),
     path('payment/', payment, name='payment'),
     path('', index, name='index'),
-    # path('simp/', simp, name='simp'),
+    path('rules/', rules, name='rules'),
     path('privacy/', privacy, name='privacy'),
-    # path('sitemap.xml/', sitemap, name='sitemap.xml'),
+    #path('sitemap.xml/', sitemap, name='sitemap.xml'),
     # path('robots.txt/', robots, name='robots.txt'),
-    # path('myorders/', Myorders.as_view(), name='myorders'),
+    path('xyz/', home, name='home'),
     # path('refund/<slug>/', refund, name='refund'),
     path('profile/', Profile.as_view(), name='Profile'),   
     path('contact/', contact, name='contact'),
-    # path('faqs/', faqs, name='faqs'),
+    path('paid/', paid, name='paid'),
 ]

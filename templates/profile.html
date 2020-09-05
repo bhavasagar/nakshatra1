@@ -43,9 +43,9 @@ img {
   margin:2%;
   border: 3px solid black;
   border-radius: 7px;
-  margin-bottom: 5%;
+  margin-bottom: 3%;
   text-align: center;
-  padding: 5%;
+  padding: 2%;
   font-size: 0.6em !important;
   width: max-content;
   cursor: pointer;
@@ -121,6 +121,47 @@ a{
   font-size: 1.1em;
   font-weight: 1000;
 }
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 100px;
+  font-size: 24px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
 </style>
 {% endblock extra_head%}
 
@@ -136,6 +177,8 @@ a{
       <div class="profilepic">
         {% if  request.user.userprofile.userphoto %}
           <img class="img" src="{{request.user.userprofile.userphoto.url}}">
+        {% else %}
+          <img class="img" src="https://nakshatra.fun/media/images/apple-touch-icon.png">
         {% endif %}
       </div>
       <div class="right pt-2">
@@ -150,15 +193,17 @@ a{
   <div >
     <div class="visible" id="cont">
       <center>
-      <div   class="line mt-2 mb-6">
-      <input type="hidden"  value="{{request.user.userprofile.get_absolute_url}}">
-        <a onclick="copier()"  href="{{request.user.userprofile.get_absolute_url}}"><span class="far fa-share-square fa-2x">  Share link</span> </a>
+      <div   class="line mt-2 mb-6">      
+        <a class="fab fa-whatsapp fa-2x" href="whatsapp://send?text=Play on Nakshatra with my referal link https://nakshatra.fun{{ request.user.userprofile.get_absolute_url }}" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp">  Share on whatsapp</a> 
       </div>
       <div id="wamt" onclick="openbox('withdraw_amt')"  class="line mb-6">
         <span class="fas fa-hand-holding fa-2x">  Withdraw Amount</span>        
       </div>
       <div id="aset" onclick="openbox('change_details')" class="line mb-6">
         <span class="fas fa-cog fa-2x">  My Account Settings</span>
+      </div>
+      <div id="rvs" onclick="openbox('red_envelope')" class="line mb-6">
+        <span class="fas fa-envelope-open-text fa-2x">  Red Envelope</span>
       </div>
       <div id="detail" onclick="openbox('view_details')" class="line mb-6">
         <span class="fas fa-info-circle fa-2x">  My Details</span>
@@ -179,7 +224,9 @@ a{
         <a href="{% url 'account_logout' %}"><span class="fas fa-sign-out-alt fa-2x" style="color: tomato;">Logout</span></a>
       </div>
       </center>
-    </div>
+    </div> 
+    <div class="box">   
+    <input type="text" value="https://nakshatra.fun{{ request.user.userprofile.get_absolute_url }}" id="myInput1"></div>
     <div id="withdraw_amt" class="box">
       <form action="." method="POST" enctype="multipart/form-data">
       {% csrf_token %}
@@ -195,6 +242,14 @@ a{
         </div>
         </center>
       </form>
+      <button onclick="backbox()" class="back-button">&lt;&lt;Back</button>
+    </div> 
+    <div id="red_envelope" class="box">
+      {% for i in rv %}
+      <div class="row card p-3 ml-4 mr-2 mb-2 rounded" style="color: white;background-color:rgb(211, 200, 200);">        
+            <span>Amount <b class="text-primary ml-1">Rs. {{ i.amount }}</b> to {{i.user}}</span> 
+      </div>
+      {% endfor %}
       <button onclick="backbox()" class="back-button">&lt;&lt;Back</button>
     </div>    
     <div id="change_details" class="box">
@@ -225,7 +280,7 @@ a{
       <center>
       {% if refers %}
       {% for i in refers %}
-      <div class="row card p-3 ml-2 mr-2" style="background-color:rgb(211, 200, 200);text-transform:capitalize">        
+      <div class="row card p-3 ml-2 mr-2 mb-2 rounded" style="background-color:rgb(211, 200, 200);text-transform:capitalize">        
         {{i.user.username}} - Rs. {{i.user.userprofile.total_amount}}
       </div>
       {% endfor %}
@@ -236,7 +291,7 @@ a{
       <button onclick="backbox()" class="back-button" style="margin-bottom: 20%;">&lt;&lt;Back</button>
     </div>
     <div id="transaction" class="box">
-      <div class="row card p-3 ml-2 mr-2" style="color: tomato;background-color:rgb(211, 200, 200);">        
+      <div class="row card p-3 ml-2 mr-2 mb-2 rounded" style="color: tomato;background-color:rgb(211, 200, 200);">        
         My Balance : Rs. {{ request.user.userprofile.total_amount }}
       </div>
       <h3 class="ml-2 mt-3">Transactions</h3>
@@ -244,7 +299,7 @@ a{
       <center>
       {% if recharges %}
       {% for i in recharges %}
-      <div class="row card p-3 ml-2 mr-2" style="color: lightgreen;background-color:rgb(211, 200, 200);">        
+      <div class="row card p-3 ml-2 mr-2 mb-2 rounded" style="color: lightgreen;background-color:rgb(211, 200, 200);">        
         On  {{i.made_on}} for  Rs. {{ i.amount }}
       </div>
       {% endfor %}
@@ -256,7 +311,7 @@ a{
       <center>
       {% if withdrawls %}
       {% for i in withdrawls %}
-      <div class="row card p-3 ml-2 mr-2" style="color: tomato;background-color:rgb(211, 200, 200);">        
+      <div class="row card p-3 ml-2 mr-2 mb-2 rounded" style="color: tomato;background-color:rgb(211, 200, 200);">        
         On  {{i.made_on}} for  Rs. {{ i.amount }} to {{ i.UPIID }}
       </div>
       {% endfor %}
@@ -272,7 +327,7 @@ a{
           Refer Link :
         </div>
         <div class="col detail" style="color: skyblue;">
-          <a onclick="copier()" href="{{ request.user.userprofile.get_absolute_url }}">click here</a>
+          <span onclick="copier()">Copy here</a>
         </div>
       </div>
       <div class="row">
@@ -318,6 +373,7 @@ a{
       <button onclick="backbox()" class="back-button">&lt;&lt;Back</button>
     </div>
   </div>
+  <div id="snackbar">Link copied...</div>
 </div>
 {% endblock content %}
 
@@ -335,10 +391,13 @@ function backbox(){
 </script>
 <script>
 function copier() {
-var copyText = document.getElementById("link");
+var copyText = document.getElementById("myInput1");
 copyText.select();
-copyText.setSelectionRange(0, 99999)
+copyText.setSelectionRange(0, 99999);
 document.execCommand("copy");
-} 
+var x = document.getElementById("snackbar");
+x.className = "show";
+setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+}
 </script>
 {% endblock extra_scripts %}

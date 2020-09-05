@@ -198,10 +198,8 @@ body {
           <div class="order-number">Rs. {{ ta }}</div>
         </div>
         {% ifequal msg "PS" %}
-        
-        <a href="/club/" class="order-footer btn btn-info rounded" style="color:#fff">To fill your details, click here!</a>
         {% else %}
-        <a href="/clubpayment/" class="order-footer btn btn-info rounded" style="color:#fff">click here to complete Payment!</a>
+        <a href="/payment/" class="order-footer btn btn-info rounded" style="color:#fff">click here to complete Payment!</a>
         {% endifequal %}
         <a href="/" class="order-footer btn btn-info rounded" style="color:#fff"><i class="fas fa-home"></i>Homepage</a>
         <div class="order-footer">Thank you!</div>

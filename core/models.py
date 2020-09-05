@@ -5,6 +5,16 @@ from django.contrib.postgres.fields import ArrayField
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django.utils import timezone
+import smtplib
+from email.message import EmailMessage
+
+CATEGORY_CHOICES = (
+    ('green', 'green'),
+    ('red', 'red'),
+    ('purple', 'purple'),
+    ('red purple', 'red purple'),
+    ('green purple', 'green purple')    
+)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -13,6 +23,7 @@ class UserProfile(models.Model):
     total_amount = models.FloatField(default="0", max_length=5)
     won = models.FloatField(default="0", max_length=5)    
     refer_income = models.FloatField(default="0", max_length=5)
+    rv_income = models.FloatField(default="0", max_length=5)
     ref_code = models.CharField(default=False, max_length=15)
     refer = models.CharField(default=False, max_length=15)
 
@@ -27,6 +38,7 @@ class UserProfile(models.Model):
 class RedEnvelope(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     amount = models.FloatField(default="0", max_length=5)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -39,7 +51,9 @@ class History(models.Model):
     num_selected = models.CharField(max_length=10,null=True,blank=True)
     paid = models.BooleanField(default=False)
     result = models.CharField(max_length=10,default="unknown",null=True,blank=True)
+    color = models.CharField(max_length=25,default="unknown",null=True,blank=True)
     mode = models.CharField(max_length=10,default="unknown",null=True,blank=True)
+    
     def __str__(self):
         return self.user.username      
 
@@ -51,10 +65,23 @@ class GoldGame(models.Model):
     purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
     n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
     result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-    id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    color = models.CharField(choices=CATEGORY_CHOICES,max_length=20,default="unknown",null=True, blank=True)    
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.now)
+    dec = models.DateTimeField(default=timezone.now)
+    result = models.CharField(max_length=10,default="unknown12",null=True, blank=True)
+    status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
+
     def __str__(self):
         return self.mode 
+
+    def save(self, *args, **kwargs):
+        from datetime import datetime, timedelta        
+        if not self.id:
+            self.end = datetime.now() + timedelta(minutes=3)
+            self.dec = datetime.now() + timedelta(minutes=2,seconds=30)
+        return super().save(*args, **kwargs)
+
         
 class SilverGame(models.Model):    
     mode = models.CharField(max_length=10,null=True, blank=True)
@@ -62,12 +89,25 @@ class SilverGame(models.Model):
     green_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
     red_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)
     purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
-    n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
+    n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list) 
     result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(choices=CATEGORY_CHOICES,max_length=20,default="unknown",null=True, blank=True)
     id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
-    def __str__(self):
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.now)
+    dec = models.DateTimeField(default=timezone.now)
+    result = models.CharField(max_length=10,default="unknown12",null=True, blank=True)
+    status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
+
+    def __str__(self, *args, **kwargs):
         return self.mode 
+
+    def save(self, *args, **kwargs):
+        from datetime import datetime, timedelta        
+        if not self.id:
+            self.end = datetime.now() + timedelta(minutes=3)
+            self.dec = datetime.now() + timedelta(minutes=2,seconds=30)
+        return super().save(*args, **kwargs)
 
 class DiamondGame(models.Model):    
     mode = models.CharField(max_length=10,null=True, blank=True)
@@ -77,10 +117,23 @@ class DiamondGame(models.Model):
     purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
     n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
     result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(choices=CATEGORY_CHOICES,max_length=20,default="unknown",null=True, blank=True)
     id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.now)
+    dec = models.DateTimeField(default=timezone.now)
+    result = models.CharField(max_length=10,default="unknown12",null=True, blank=True)
+    status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
+
     def __str__(self):
         return self.mode 
+
+    def save(self, *args, **kwargs):
+        from datetime import datetime, timedelta        
+        if not self.id:
+            self.end = datetime.now() + timedelta(minutes=3)
+            self.dec = datetime.now() + timedelta(minutes=2,seconds=30)
+        return super().save(*args, **kwargs)
 
 class OtherGame(models.Model):    
     mode = models.CharField(max_length=10,null=True, blank=True)
@@ -90,10 +143,23 @@ class OtherGame(models.Model):
     purple_investment = models.FloatField(max_length=10,default='0',null=True, blank=True)    
     n_investment = ArrayField(models.CharField(max_length=10),size=10,null=True, blank=True,default=list)
     result = models.CharField(max_length=10,default="unknown",null=True, blank=True)
-    color = models.CharField(max_length=10,default="unknown",null=True, blank=True)
+    color = models.CharField(choices=CATEGORY_CHOICES,max_length=20,default="unknown",null=True, blank=True)
     id_made = models.CharField(max_length=20,default="unknown",null=True, blank=True)
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.now)
+    dec = models.DateTimeField(default=timezone.now)
+    result = models.CharField(max_length=10,default="unknown12",null=True, blank=True)
+    status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
+ 
     def __str__(self):
-        return self.mode                     
+        return self.mode 
+
+    def save(self, *args, **kwargs):
+        from datetime import datetime, timedelta        
+        if not self.id:
+            self.end = datetime.now() + timedelta(minutes=3)
+            self.dec = datetime.now() + timedelta(minutes=2,seconds=30)
+        return super().save(*args, **kwargs)                
 
 class Transaction(models.Model):
     made_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='transactions', 
@@ -160,20 +226,36 @@ class Paytm_history(models.Model):
 class withdraw_requests(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     amount = models.CharField(default=False, max_length=15)
-    UPIID = models.CharField(default=False, max_length=15)
+    UPIID = models.CharField(default=False, max_length=35)
     paid = models.BooleanField(default=False)  
     made_on = models.DateTimeField(auto_now_add=True)  
 
     def __str__(self):
         return '%s  (%s)' % (self.amount ,self.UPIID)
 
-class Carousal(models.Model):
-    for_carousal = models.CharField(max_length=15)
+class Carousal(models.Model):    
     image = models.ImageField(upload_to='images/', null=True)
     heading = models.CharField(max_length=15)
     description = models.CharField(max_length=100)
-    urlfield = models.URLField(max_length = 200)    
+    urlfield = models.URLField(max_length = 200)
+    
+class Carousal1(models.Model):    
+    image = models.ImageField(upload_to='images/', null=True)
+    heading = models.CharField(max_length=15)
+    description = models.CharField(max_length=100)
+    urlfield = models.URLField(max_length = 200)        
 
+class Carousal2(models.Model):    
+    image = models.ImageField(upload_to='images/', null=True)
+    heading = models.CharField(max_length=15)
+    description = models.CharField(max_length=100)
+    urlfield = models.URLField(max_length = 200)
+
+class Carousal3(models.Model):    
+    image = models.ImageField(upload_to='images/', null=True)
+    heading = models.CharField(max_length=15)
+    description = models.CharField(max_length=100)
+    urlfield = models.URLField(max_length = 200)
 # class Carousal(models.Model):
 #     carousal = models.many_to_one(Carousal, on_delete=models.CASCADE)    
 
@@ -214,6 +296,7 @@ class Contact(models.Model):
 #         verbose_name_plural = 'FAQs'
 
 import random as rd
+from _datetime import timedelta
 def refgenrator():
     l=rd.choices(range(65,90),k=6)
     c=""
@@ -238,3 +321,24 @@ def userprofile_receiver(sender, instance, created, *args, **kwargs):
         userprofile.save()
 
 post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)
+
+def red_envelope_receiver(sender, instance, created, *args, **kwargs):
+    if created:
+        userprofile = UserProfile.objects.get(user=instance.user)         
+        userprofile.total_amount = float(userprofile.total_amount)+float(instance.amount)
+        userprofile.rv_income = float(instance.amount)           
+        userprofile.save()
+        try:
+            server = smtplib.SMTP_SSL('smtp.gmail.com',465)
+            server.login('nakshatra.fun@gmail.com','ganesh@123')             
+            msg1 = EmailMessage()
+            msg1.set_content("A Red Envelope of amount Rs. "+str(instance.amount)+" has sent to you by Nakshatra Team.")
+            msg1['Subject'] = 'Red Envelope - Nakshatra'
+            msg1['From'] = "nakshatra.fun@gmail.com"
+            msg1['To'] = instance.user.email
+            server.send_message(msg1)
+            server.quit()
+        except:
+            pass
+
+post_save.connect(red_envelope_receiver, sender=RedEnvelope)
