@@ -8,8 +8,7 @@ from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.utils import timezone
-# from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile, Transaction, TravelDetails, ClubJoin, Paytm_order_history,Paytm_history, Carousal, Reviews, Team, Ads, Itemdealer, Myorder, Categories, Sales, CarousalClub, ReviewsImage, Contact, FAQs
-from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Contact, Carousal, RedEnvelope, Carousal1, Carousal2, Carousal3
+from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Contact, Carousal, RedEnvelope, Carousal1, Carousal2, Carousal3, Notifications, Home_description
 import random
 from django.shortcuts import reverse
 import string
@@ -72,21 +71,27 @@ def paid(request, slug):
 class Profile(LoginRequiredMixin, View):
     template_name = "profile.html"
     def get(self, *args, **kwargs):
-        context={}        
+        context={}                
         recharges = Paytm_history.objects.filter(user=self.request.user,STATUS='TXN_SUCCESS').order_by('-id')
         context['recharges'] = recharges
         if recharges.count()>10:
             context['recharges'] = recharges[:10]
         withdrawls = withdraw_requests.objects.filter(user=self.request.user).order_by('-id')
         context['withdrawls'] = withdrawls
-        if recharges.count()>10:
+        if withdrawls.count()>10:
             context['withdrawls'] = withdrawls[:10]
+        history = History.objects.filter(user=self.request.user).order_by('-id')
+        context['history'] = history
+        if history.count()>10:
+            context['history'] = history[:10]
         refers = UserProfile.objects.filter(refer=self.request.user.username).order_by('-id')
-        context['refers'] = refers
+        context['refers'] = refers       
         if refers.count()>10: 
             context['refers'] = refers[:10]
         re = RedEnvelope.objects.filter(user=self.request.user)
-        context['rv'] = re
+        context['rv'] = re  
+        notes = Notifications.objects.all()
+        context['notes'] = notes
         return render(self.request,self.template_name,context=context)
     def post(self, *args, **kwargs):
         if self.request.method == 'POST':            
@@ -252,37 +257,18 @@ def index(request):
         carousals3 = Carousal3.objects.all().exclude(id=c3.id)
         context['carousals3'] = carousals3
         context['c3'] = c3
+        lines0 = Home_description.objects.all()[0]
+        context['lines0'] = lines0
+        lines1 = Home_description.objects.all()[2]
+        context['lines1'] = lines1
+        lines2 = Home_description.objects.all()[2]
+        context['lines2'] = lines2
     except:
         pass
     return render(request,'index.html',context=context)      
 
-def home(request):    
-    hists = History.objects.filter(user__username="Paul")
-    total = 0
-    win,loss = 0,0
-    for i in hists:
-        if i.num_selected:
-            if i.num_selected == i.result:
-                total += (float(i.investment)*7+float(i.investment)*0.3*7)
-                win += (float(i.investment)+float(i.investment)*0.3)
-            else:
-                loss -= (float(i.investment)+float(i.investment)*0.3)
-                total -= (float(i.investment)+float(i.investment)*0.3)  
-        if i.color_selected:
-            if i.color_selected in i.color:
-                if i.color_selected == "purple":
-                    total += (float(i.investment)*2+float(i.investment)*0.3*2)
-                    win += (float(i.investment)*2+float(i.investment)*0.3*2)
-                if i.color_selected == "red" or i.color_selected == "green" and i.color == "purple":
-                    total += (float(i.investment)*1.5+float(i.investment)*0.3*1.5)
-                    win += (float(i.investment)*1.5+float(i.investment)*0.3*1.5)
-                if i.color_selected == "red" or i.color_selected == "green" and i.color != "purple":
-                    total += (float(i.investment)*2+float(i.investment)*0.3*2)
-                    win += (float(i.investment)*2+float(i.investment)*0.3*2)                    
-            else:
-                loss -= (float(i.investment)+float(i.investment)*0.3)
-                total -= (float(i.investment)+float(i.investment)*0.3)
-    return render(request,"home.html",context={'total':total,'win':win,'loss':loss})
+def home(request):        
+    return render(request,"home.html")
                 
     
 def payusers(game_id,mode):
@@ -352,24 +338,27 @@ def payusers(game_id,mode):
             game.save()
                
     else:  
-        result = random.randint(0,9)
-        game.result = str(result)
-        if result == 0 or result == 5:
-           if result == 0:                                          
-               game.color = "red purple"        
-               game.save()                                
-           if result == 5:
-               game.color = "green purple"        
-               game.save() 
-        else:
-           if result%2 == 1:
-               game.color = "green"
-               game.save()
-           else:
-               game.color = "red"
-               game.save()
+        game.total_investment = float(random.randint(100,3000))
+        game.save()
+        if game.result == 'unknown12':
+            result = random.randint(0,9)        
+            game.result = str(result)
+            if result == 0 or result == 5:
+               if result == 0:                                          
+                   game.color = "red purple"        
+                   game.save()                                
+               if result == 5:
+                   game.color = "green purple"        
+                   game.save() 
+            else:
+               if result%2 == 1:
+                   game.color = "green"
+                   game.save()
+               else:
+                   game.color = "red"
+                   game.save()
     hists = History.objects.filter(id_made=game.id,paid=False,mode=mode)
-    clrlst = game.color.split(' ')
+    clrlst = game.color.split(' ') 
     while True:
         if '' in clrlst:
             clrlst.remove('')
@@ -377,8 +366,8 @@ def payusers(game_id,mode):
             clrlst.remove(' ')
         else:
             break
-    for i in hists:
-        i.result = game.result
+    for i in hists:        
+        i.result = "lost"
         i.color = game.color
         i.save()
         if i.color_selected:
@@ -387,45 +376,73 @@ def payusers(game_id,mode):
                     i.user.userprofile.won = float(float(i.investment)*1.5)
                     i.user.userprofile.total_amount = float(i.user.userprofile.total_amount) + float(i.investment)*1.5
                     i.paid = True
-                    i.user.userprofile.save()
+                    i.result = "won"
+                    i.wamt =  str(float(i.investment)*1.5)[:9]
                     i.save()
+                    i.user.userprofile.save()                                  
                     if i.user.userprofile.refer != "False":
                         try:
                             u = User.objects.get(username=i.user.userprofile.refer)
                             up = UserProfile.objects.get(user=u)
-                            up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.3)
-                            up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.3)
-                            up.save()
+                            if int(up.level)==4:                                
+                                up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.09)
+                                up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.09)
+                                up.save()   
+                            if up.refer != "False":                         
+                                rp = User.objects.get(username=up.refer)
+                                r = UserProfile.objects.get(user=rp)
+                                r.refer_income2 = float(r.refer_income2) + float(float(i.user.userprofile.won)*0.06)
+                                r.total_amount = float(r.total_amount)+float(float(i.user.userprofile.won)*0.06)
+                                r.save()                                    
                         except:
                             pass                                                    
                 else:
                     i.user.userprofile.won = float(float(i.investment)*2)
                     i.user.userprofile.total_amount = float(i.user.userprofile.total_amount) + float(float(i.investment)*2)
                     i.paid = True
-                    i.user.userprofile.save()
+                    i.result = "won"
+                    i.wamt =  str(float(i.investment)*2)[:9]
                     i.save()
+                    i.user.userprofile.save()                                           
                     if i.user.userprofile.refer != "False":
                         try:
                             u = User.objects.get(username=i.user.userprofile.refer)
                             up = UserProfile.objects.get(user=u)
-                            up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.3)
-                            up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.3)
-                            up.save()
+                            if int(up.level)==4:                                
+                                up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.09)
+                                up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.09)
+                                up.save()
+                            if up.refer != "False":                         
+                                rp = User.objects.get(username=up.refer)
+                                r = UserProfile.objects.get(user=rp)
+                                r.refer_income2 = float(r.refer_income2) + float(float(i.user.userprofile.won)*0.06)
+                                r.total_amount = float(r.total_amount)+float(float(i.user.userprofile.won)*0.06)
+                                r.save() 
                         except:
                             pass
             elif i.color_selected in clrlst and game.color == 'purple':
                 i.user.userprofile.won = float(float(i.investment)*2)
                 i.user.userprofile.total_amount = float(i.user.userprofile.total_amount) + float(float(i.investment)*2)
                 i.paid = True
-                i.user.userprofile.save()
+                i.result = "won"
                 i.save()
+                i.user.userprofile.save()  
+                i.wamt =  str(float(i.investment)*2)[:9]
+                i.save()              
                 if i.user.userprofile.refer != "False":
                     try:
                         u = User.objects.get(username=i.user.userprofile.refer)
                         up = UserProfile.objects.get(user=u)
-                        up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.3)
-                        up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.3)
-                        up.save()
+                        if int(up.level)==4:                                
+                            up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.09)
+                            up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.09)
+                            up.save()
+                        if up.refer != "False":                         
+                            rp = User.objects.get(username=up.refer)
+                            r = UserProfile.objects.get(user=rp)
+                            r.refer_income2 = float(r.refer_income2) + float(float(i.user.userprofile.won)*0.06)
+                            r.total_amount = float(r.total_amount)+float(float(i.user.userprofile.won)*0.06)
+                            r.save() 
                     except:
                         pass
 
@@ -434,20 +451,29 @@ def payusers(game_id,mode):
                 i.user.userprofile.won = float(float(i.investment)*7)
                 i.user.userprofile.total_amount = float(i.user.userprofile.total_amount) + float(float(i.investment)*7)
                 i.paid = True 
-                i.user.userprofile.save()
+                i.result = "won"
+                i.wamt =  str(float(i.investment)*7)[:9]
                 i.save()
+                i.user.userprofile.save()                                                
                 if i.user.userprofile.refer != "False":
                     try:
                         u = User.objects.get(username=i.user.userprofile.refer)
                         up = UserProfile.objects.get(user=u)
-                        up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.3)
-                        up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.3)
-                        up.save()
+                        if int(up.level)==4:                                
+                            up.refer_income = float(up.refer_income) + float(float(i.user.userprofile.won)*0.09)
+                            up.total_amount = float(up.total_amount)+float(float(i.user.userprofile.won)*0.09)
+                            up.save()                        
+                        if up.refer != "False":                         
+                            rp = User.objects.get(username=up.refer)
+                            r = UserProfile.objects.get(user=rp)
+                            r.refer_income2 = float(r.refer_income2) + float(float(i.user.userprofile.won)*0.06)
+                            r.total_amount = float(r.total_amount)+float(float(i.user.userprofile.won)*0.06)
+                            r.save() 
                     except:
                         pass    
  
 nums = [str(0) for i in range(10)]              
-
+ 
 num_for_see = [str(i) for i in range(10)]
 
 from datetime import datetime
@@ -549,7 +575,7 @@ class NumberSection(LoginRequiredMixin,ListView):
         name = str(self.request.POST.get("choosen")).split(' ')
         amt = self.request.POST.get("total")
         amt1 = float(amt)
-        nums = num_for_see
+        nums = num_for_see        
         if float(amt)<10:
             messages.warning(self.request,"Investment can't be less than 10!")
             return redirect('core:play') 
@@ -580,7 +606,7 @@ class NumberSection(LoginRequiredMixin,ListView):
                         self.gold_game.purple_investment = float(self.gold_game.purple_investment)+float(amt)
                         self.gold_game.save()
                 else:
-                    index = int(hist.num_selected)-1
+                    index = int(hist.num_selected)
                     self.gold_game.n_investment[index] = float(self.gold_game.n_investment[index])+float(amt)
                 self.gold_game.save()
                 hist.save()
@@ -604,7 +630,7 @@ class NumberSection(LoginRequiredMixin,ListView):
                     elif hist.color_selected == 'purple':
                         silver_game.purple_investment = float(silver_game.purple_investment)+float(amt)
                 else:
-                    index = int(hist.num_selected)-1
+                    index = int(hist.num_selected)
                     silver_game.n_investment[index] = float(silver_game.n_investment[index])+float(amt)
                 silver_game.save()
                 hist.save()
@@ -628,7 +654,7 @@ class NumberSection(LoginRequiredMixin,ListView):
                     elif hist.color_selected == 'purple':
                         diamond_game.purple_investment = float(diamond_game.purple_investment)+float(amt)
                 else:
-                    index = int(hist.num_selected)-1
+                    index = int(hist.num_selected)
                     diamond_game.n_investment[index] = float(diamond_game.n_investment[index])+float(amt)
                 diamond_game.save()                
                 hist.save()
@@ -652,7 +678,7 @@ class NumberSection(LoginRequiredMixin,ListView):
                     elif hist.color_selected == 'purple':
                         other_game.purple_investment = float(other_game.purple_investment)+float(amt)                    
                 else:
-                    index = int(hist.num_selected)-1
+                    index = int(hist.num_selected)
                     other_game.n_investment[index] = float(other_game.n_investment[index])+float(amt)
                 other_game.save()
                 hist.save()

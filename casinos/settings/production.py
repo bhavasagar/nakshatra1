@@ -2,7 +2,7 @@ from .base import *
 # from decouple import config
 
 DEBUG = config('DEBUG', cast=bool)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['nakshatra.fun','176.9.233.36']
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -14,9 +14,9 @@ AUTH_PASSWORD_VALIDATORS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nak',
-        'USER': 'nak',
-        'PASSWORD': 'nak',
+        'NAME': 'naks',
+        'USER': 'naks',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
     }

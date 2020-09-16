@@ -13,17 +13,15 @@
 
 
         body>.rules_and_recharges{
-            background-image: linear-gradient(90deg, #FF7F50, darkorange);
-            color: aliceblue;
-            padding-top: 1%;
+            background-image: linear-gradient(90deg, #1d5ebf, #1aacd9); 
+            color: aliceblue;            
             padding-left: 1%;
             padding-right: 1%;
             padding-bottom: 1%;
             height:120px;
             vertical-align: middle;
             text-align: justify;
-            font-family: 'Noto Sans JP', sans-serif;
-            border-radius: 5px;
+            font-family: 'Noto Sans JP', sans-serif;            
             position: relative;            
             z-index: 10;
         }
@@ -225,9 +223,9 @@
 
     #clockdiv{
       font-family: sans-serif;
-      color: #00ced9;
+      color: #000;
       display: inline-block;
-      font-weight: 100;
+      font-weight: 1000;
       text-align: center;
       font-size: 1.2em;
       float: right;                       
@@ -236,10 +234,9 @@
     }
     
     #clockdiv > div{
-      padding: 5px;
+      padding: 0px;
       border-radius: 3px;
-      background: #000;
-      color: #00ced9;
+      color: #000;      
       display: inline-block;                        
     }
 
@@ -247,11 +244,11 @@
       background-color: #fff;
     }
     
-    #clockdiv div > span{
-      padding: 5px;
+    #clockdiv div > span{   
+      padding: 1%;   
       border-radius: 3px;
-      background: #000;
-      color: #00ced9;
+      color: #000;         
+      background:#d6d4d0;  
       display: inline-block;
     }
     
@@ -445,11 +442,11 @@
   }
   #clockdiv{
     font-family: sans-serif;
-    color: #00ced9;
+    color: #000;
     display: inline-block;
-    font-weight: 100;
+    font-weight: 1000;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.5em;
     float: right;                       
     margin-left: 70%;
     margin-top: -15%;
@@ -457,19 +454,17 @@
     right: 30px;        
   }
   
-  #clockdiv > div{
-    padding: 5px;
-    border-radius: 3px;
-    background: #000;
-    color: #00ced9;
+  #clockdiv > div{    
+    border-radius: 3px;    
+    color: #000;
     display: inline-block;                        
   }
   
-  #clockdiv div > span{
-    padding: 5px;
+  #clockdiv div > span{    
     border-radius: 3px;
-    background: #000;
-    color: #00ced9;
+    width: fit-content;height: fit-content;    
+    color: #000;
+    background:#d6d4d0;
     display: inline-block;
   }
   
@@ -479,6 +474,9 @@
   }
 
   }
+  
+  .detail{
+  text-align:center;}
 
     </style>
     <style>
@@ -581,7 +579,7 @@
 </style>
     <div class='rules_and_recharges'>        
             <p class="left1">Balance: Rs. {{ request.user.userprofile.total_amount }}</p>            
-            <p class="left1">Winnings: Rs. {{ request.user.userprofile.won }}</p>                        
+            <p class="left1">Member: {{ request.user.id }}</p>                        
             <p class="right1"><a href="{% url 'core:rules' %}">Game Rules</a></p>
             <p class="right1"><span class="fas fa-wallet mr-2 fa-spin"></span><a href="{% url 'core:payment' %}">Recharge</a></p>             
     </div>
@@ -609,20 +607,23 @@
                                
                         <div  id="clockdiv">  
                           <div>
-                            <span id="gold_min" class="minutes blink">{{ gold_minutes }}</span>
-                            <div class="smalltext">Minutes</div>
+                            <span id="gold_min" class="minutes">{{ gold_minutes }}</span>
+                            <div class="smalltext"></div>
                           </div>
                           <div>
-                            <span id="gold_sec" class="seconds blink">{{ gold_seconds }}</span>
-                            <div class="smalltext">Seconds</div>
+                            <span class="minutes" style="background:#fff">:</span>
+                          </div>
+                          <div>
+                            <span id="gold_sec" class="seconds">{{ gold_seconds }}</span>
+                            <div class="smalltext"></div>
                           </div>
                         </div>                    
 <br>
                                                                         
                             <div class="row mt-5 pl-2 pr-2">
                               <div onclick="openForm('Gold Green','green','{{ gold_status }}')" class="{{ gold_status }} col green_c"><span class="{{ gold_status }} blink">Join Green</span></div>
-                              <div onclick="openForm('Gold Red','red','{{ gold_status }}')" class="{{ gold_status }} col red_c"><span class="{{ gold_status }} blink">Join Red</span></div>
                               <div onclick="openForm('Gold Purple','violet','{{ gold_status }}')" class="{{ gold_status }} col purple_c"><span class="{{ gold_status }} blink">Join Purple</span></div>
+                              <div onclick="openForm('Gold Red','red','{{ gold_status }}')" class="{{ gold_status }} col red_c"><span class="{{ gold_status }} blink">Join Red</span></div>                              
                             </div>
                           
                             <div class="row mt-2 pl-2 pr-2">
@@ -683,43 +684,63 @@
                                 </tbody>
                               </table>
                             
-                              <span class="mt-4 mb-1 myrecord p-2 ml-2">My Record:</span>
-
-                            <table id='ref_4_min5' class="table table-striped border_rad h-auto mt-3 mb-2" style="margin-bottom: 22%;">
-                                <thead>
-                                  <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Number</th>
-                                    <th scope="col">Result</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
+                              <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
                                   {% if my_gold_history %}
                                   {% for i in my_gold_history %}
-                                  <tr>
-                                    <th scope="row">{{i.id_made}}</th>
-                                    <td>{{i.investment}}</td>
-                                    <td>{{ i.result }}</td>
-                                    <td>
-                                    <style>
-                                    .mgres_{{forloop.counter}}{display: inline-block;}
-                                    </style>
-                                    {% if 'green' in i.color %}
-                                    <span style="margin-left:-1%" class="mgres_{{forloop.counter}} green_result"></span>
-                                    {% endif %}
-                                    {% if 'red' in i.color %}
-                                    <span style="margin-left:-1%" class="mgres_{{forloop.counter}} red_result"></span>
-                                    {% endif %}
-                                    {% if 'purple' in i.color %}
-                                    <span style="margin-left:-1%" class="mgres_{{forloop.counter}} purple_result"></span>
-                                    {% endif %}     
-                                    </td>                           
-                                  </tr>       
+                                  <div class="border m-1 p-3 rounded">       
+                                    <div class="row">
+                                      <div class="col detail">
+                                        ID: 
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.id_made }}
+                                      </div> 
+                                      <div class="col detail">
+                                        Amount:  
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.investment }}
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col detail">
+                                        Invested: 
+                                      </div>
+                                      <div class="col detail">
+                                        {% if i.color_selected in "red purple green" %}
+                                        <style>
+                                          .mgres_{{forloop.counter}}{display: inline-block;}
+                                          </style>
+                                          {% if 'green' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mgres_{{forloop.counter}} green_result"></span>
+                                          {% endif %}
+                                          {% if 'red' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mgres_{{forloop.counter}} red_result"></span>
+                                          {% endif %}
+                                          {% if 'purple' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mgres_{{forloop.counter}} purple_result"></span>                
+                                          {% endif %}  
+                                          {% else %}
+                                          <span style="margin-left:-1%">{{ i.num_selected }}</span>
+                                          {% endif %}                
+                                      </div>                                    
+                                      <div class="col detail">
+                                        Status: 
+                                      </div>
+                                      <div class="col detail">
+                                      {% if i.result == "won" %}
+                                        <span style="color:green">Won</span>
+                                      {% elif i.result == "lost" %}
+                                        <span style="color:tomato">Lost</span>
+                                      {% else %}                              
+                                      <span style="color:tomato">Wait</span>        
+                                      {% endif %}
+                                      </div>                                    
+                                    </div>                                                 
+                                   </div>        
                                   {% endfor %}  
                                   {% endif %}      
-                                </tbody>
-                              </table>  
+                                 
                             </div>    
                 </div>
                 <div id="second" class="box">
@@ -728,12 +749,15 @@
                   <p class="clock">Time Left:</p>                   
                     <div  id="clockdiv">  
                       <div>
-                        <span id="silver_min" class="minutes blink">{{ silver_minutes }}</span>
-                        <div class="smalltext">Minutes</div>
+                        <span id="silver_min" class="minutes">{{ silver_minutes }}</span>
+                        <div class="smalltext"></div>
                       </div>
                       <div>
-                        <span id="silver_sec" class="seconds blink">{{ silver_seconds }}</span>
-                        <div class="smalltext">Seconds</div>
+                            <span class="minutes" style="background:#fff">:</span>
+                          </div>
+                      <div>
+                        <span id="silver_sec" class="seconds">{{ silver_seconds }}</span>
+                        <div class="smalltext"></div>
                       </div>
                     </div>
 <br>
@@ -741,8 +765,8 @@
                          
                             <div class="row mt-5 pl-2 pr-2">
                               <div onclick="openForm('Silver Green','green','{{silver_status}}')" class="{{ silver_status }} col green_c"><span class="{{ silver_status }} blink">Join Green</span></div>
-                              <div onclick="openForm('Silver Red','red','{{silver_status}}')" class="{{ silver_status }} col red_c"><span class="{{ silver_status }} blink">Join Red</span></div>
                               <div onclick="openForm('Silver Purple','violet','{{silver_status}}')" class="{{ silver_status }} col purple_c"><span class="{{ silver_status }} blink">Join Purple</span></div>
+                              <div onclick="openForm('Silver Red','red','{{silver_status}}')" class="{{ silver_status }} col red_c"><span class="{{ silver_status }} blink">Join Red</span></div>                              
                             </div>
                             
                             <div class="row mt-2 pl-2 pr-2">
@@ -803,43 +827,62 @@
                               </tbody>
                             </table>
                           
-                           <span class="mt-4 mb-1 myrecord p-2 ml-2">My Record:</span>
-
-                          <table  class="table table-striped border_rad h-auto">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Id</th>
-                                  <th scope="col">Amount</th>
-                                  <th scope="col">Number</th>
-                                  <th scope="col">Result</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% if my_silver_history %}
+                           <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
+                                  {% if my_silver_history %}
                                   {% for i in my_silver_history %}
-                                  <tr>
-                                    <th scope="row">{{i.id_made}}</th>
-                                    <td>{{i.investment}}</td>
-                                    <td>{{ i.result }}</td>
-                                    <td>
-                                    <style>
-                                    .smres_{{forloop.counter}}{display: inline-block;}
-                                    </style>
-                                    {% if 'green' in i.color %}
-                                    <span style="margin-left:-1%" class="smres_{{forloop.counter}} green_result"></span>
-                                    {% endif %}
-                                    {% if 'red' in i.color %}
-                                    <span style="margin-left:-1%" class="smres_{{forloop.counter}} red_result"></span>
-                                    {% endif %}
-                                    {% if 'purple' in i.color %}
-                                    <span style="margin-left:-1%" class="smres_{{forloop.counter}} purple_result"></span>
-                                    {% endif %} 
-                                    </td>                                                                                                    
-                                  </tr>            
-                                  {% endfor %}                           
-                                  {% endif %}   
-                              </tbody>
-                            </table> 
+                                  <div class="border m-1 p-3 rounded">       
+                                    <div class="row">
+                                      <div class="col detail">
+                                        ID: 
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.id_made }}
+                                      </div> 
+                                      <div class="col detail">
+                                        Amount:  
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.investment }}
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col detail">
+                                        Invested: 
+                                      </div>
+                                      <div class="col detail">
+                                        {% if i.color_selected in "red purple green" %}
+                                        <style>
+                                          .msres_{{forloop.counter}}{display: inline-block;}
+                                          </style>
+                                          {% if 'green' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="msres_{{forloop.counter}} green_result"></span>
+                                          {% endif %}
+                                          {% if 'red' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="msres_{{forloop.counter}} red_result"></span>
+                                          {% endif %}
+                                          {% if 'purple' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="msres_{{forloop.counter}} purple_result"></span>                
+                                          {% endif %}  
+                                          {% else %}
+                                          <span style="margin-left:-1%">{{ i.num_selected }}</span>
+                                          {% endif %}                
+                                      </div>                                    
+                                      <div class="col detail">
+                                        Status: 
+                                      </div>
+                                      <div class="col detail">
+                                      {% if i.result == "won" %}
+                                        <span style="color:green">Won</span>
+                                      {% elif i.result == "lost" %}
+                                        <span style="color:tomato">Lost</span>
+                                      {% else %}                              
+                                      <span style="color:tomato">Wait</span>        
+                                      {% endif %}
+                                      </div>                                    
+                                    </div>                                               
+                                   </div>        
+                                  {% endfor %}  
+                                  {% endif %}                                   
                             </div>  
                         </div>                        
                 </div>              
@@ -849,20 +892,23 @@
                   <p class="clock">Time Left:</p>                   
                     <div  id="clockdiv">  
                       <div>
-                        <span id="diamond_min" class="minutes blink">{{ diamond_minutes }}</span>
-                        <div class="smalltext">Minutes</div>
+                        <span id="diamond_min" class="minutes">{{ diamond_minutes }}</span>
+                        <div class="smalltext"></div>
                       </div>
                       <div>
-                        <span id="diamond_sec" class="seconds blink">{{ diamond_seconds }}</span>
-                        <div class="smalltext">Seconds</div>
+                            <span class="minutes" style="background:#fff">:</span>
+                          </div>
+                      <div>
+                        <span id="diamond_sec" class="seconds">{{ diamond_seconds }}</span>
+                        <div class="smalltext"></div>
                       </div>
                     </div>
 <br>
                   <div class="game_container mt-5" >                                                
                           <div class="row mt-5 pl-2 pr-2">
-                            <div onclick="openForm('Diamond Green','green','{{diamond_status}}')" class="col green_c {{diamond_status}}"><span class="blink">Join Green</span></div>
-                            <div onclick="openForm('Diamond Red','red','{{diamond_status}}')" class="col red_c {{diamond_status}}"><span class="blink">Join Red</span></div>
+                            <div onclick="openForm('Diamond Green','green','{{diamond_status}}')" class="col green_c {{diamond_status}}"><span class="blink">Join Green</span></div>                            
                             <div onclick="openForm('Diamond Purple','violet','{{diamond_status}}')" class="col purple_c {{diamond_status}}"><span class="blink">Join Purple</span></div>
+                            <div onclick="openForm('Diamond Red','red','{{diamond_status}}')" class="col red_c {{diamond_status}}"><span class="blink">Join Red</span></div>
                           </div>
                         
                           <div class="row mt-2 pl-2 pr-2">
@@ -922,43 +968,62 @@
                               </tbody>
                             </table>
                           
-                           <span class="mt-4 mb-1 myrecord p-2 ml-2">My Record:</span>
-
-                          <table class="table table-striped border_rad h-auto mt-3 mb-2">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Id</th>
-                                  <th scope="col">Amount</th>
-                                  <th scope="col">Number</th>
-                                  <th scope="col">Result</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% if my_diamond_history %}
+                          <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
+                                  {% if my_diamond_history %}
                                   {% for i in my_diamond_history %}
-                                  <tr>
-                                    <th scope="row">{{i.id_made}}</th>
-                                    <td>{{i.investment}}</td>
-                                    <td>{{ i.result }}</td>
-                                    <td>
-                                    <style>
-                                    .dmres_{{forloop.counter}}{display: inline-block;}
-                                    </style>
-                                    {% if 'green' in i.color %}
-                                    <span style="margin-left:-1%" class="dmres_{{forloop.counter}} green_result"></span>
-                                    {% endif %}
-                                    {% if 'red' in i.color %}
-                                    <span style="margin-left:-1%" class="dmres_{{forloop.counter}} red_result"></span>
-                                    {% endif %}
-                                    {% if 'purple' in i.color %}
-                                    <span style="margin-left:-1%" class="dmres_{{forloop.counter}} purple_result"></span>
-                                    {% endif %} 
-                                    </td>                                   
-                                  </tr>        
-                                  {% endfor %}                           
+                                  <div class="border m-1 p-3 rounded">       
+                                    <div class="row">
+                                      <div class="col detail">
+                                        ID: 
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.id_made }}
+                                      </div> 
+                                      <div class="col detail">
+                                        Amount:  
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.investment }}
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col detail">
+                                        Invested: 
+                                      </div>
+                                      <div class="col detail">
+                                        {% if i.color_selected in "red purple green" %}
+                                        <style>
+                                          .mdres_{{forloop.counter}}{display: inline-block;}
+                                          </style>
+                                          {% if 'green' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mdres_{{forloop.counter}} green_result"></span>
+                                          {% endif %}
+                                          {% if 'red' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mdres_{{forloop.counter}} red_result"></span>
+                                          {% endif %}
+                                          {% if 'purple' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mdres_{{forloop.counter}} purple_result"></span>                
+                                          {% endif %}  
+                                          {% else %}
+                                          <span style="margin-left:-1%">{{ i.num_selected }}</span>
+                                          {% endif %}                
+                                      </div>                                    
+                                      <div class="col detail">
+                                        Status: 
+                                      </div>
+                                      <div class="col detail">
+                                      {% if i.result == "won" %}
+                                        <span style="color:green">Won</span>
+                                      {% elif i.result == "lost" %}
+                                        <span style="color:tomato">Lost</span>
+                                      {% else %}                              
+                                      <span style="color:tomato">Wait</span>        
+                                      {% endif %}
+                                      </div>                                    
+                                    </div>                                                
+                                   </div>        
+                                  {% endfor %}  
                                   {% endif %}    
-                              </tbody>
-                            </table>   
                           </div>
                         </div>
                 </div>
@@ -968,21 +1033,24 @@
                   <p class="clock">Time Left:</p>                   
                     <div  id="clockdiv">  
                       <div>
-                        <span id="other_min" class="minutes blink">{{ other_minutes }}</span>
-                        <div class="smalltext">Minutes</div>
+                        <span id="other_min" class="minutes">{{ other_minutes }}</span>
+                        <div class="smalltext"></div>
                       </div>
                       <div>
-                        <span id="other_sec" class="seconds blink">{{ other_seconds }}</span>
-                        <div class="smalltext">Seconds</div>
+                            <span class="minutes" style="background:#fff">:</span>
+                          </div>
+                      <div>
+                        <span id="other_sec" class="seconds">{{ other_seconds }}</span>
+                        <div class="smalltext"></div>
                       </div>
                     </div>
                   
 <br>              
                   <div id="game_container" class="game_container mt-5" >                        
                           <div class="row mt-5 pl-2 pr-2">
-                            <div onclick="openForm('Other Green','green','{{ other_status }}')" class="col green_c {{other_status}}"><span class="blink">Join Green</span></div>
-                            <div onclick="openForm('Other Red','red','{{ other_status }}')" class="col red_c {{other_status}}"><span class="blink">Join Red</span></div>
+                            <div onclick="openForm('Other Green','green','{{ other_status }}')" class="col green_c {{other_status}}"><span class="blink">Join Green</span></div>                            
                             <div onclick="openForm('Other Purple','violet','{{ other_status }}')" class="col purple_c {{other_status}}"><span class="blink">Join Purple</span></div>
+                            <div onclick="openForm('Other Red','red','{{ other_status }}')" class="col red_c {{other_status}}"><span class="blink">Join Red</span></div>
                           </div>
                         
                           <div class="row mt-2 pl-2 pr-2">
@@ -1042,44 +1110,62 @@
                               </tbody>
                             </table>
                                                                                       
-                                <span class="mt-4 mb-1 myrecord p-2 ml-2">My Record:</span>
-                            
-                          
-                          <table class="table table-striped border_rad h-auto mt-3 mb-2" style="margin-bottom: 22%;">
-                              <thead>
-                                <tr>
-                                  <th scope="col">Id</th>
-                                  <th scope="col">Amount</th>
-                                  <th scope="col">Number</th>
-                                  <th scope="col">Result</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% if my_other_history %}
+                               <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
+                                  {% if my_other_history %}
                                   {% for i in my_other_history %}
-                                  <tr>
-                                    <th scope="row">{{i.id_made}}</th>
-                                    <td>{{i.investment}}</td>
-                                    <td>{{ i.result }}</td>
-                                    <td>
-                                    <style>
-                                    .omres_{{forloop.counter}}{display: inline-block;}
-                                    </style>
-                                    {% if 'green' in i.color %}
-                                    <span style="margin-left:-1%" class="omres_{{forloop.counter}} green_result"></span>
-                                    {% endif %}
-                                    {% if 'red' in i.color %}
-                                    <span style="margin-left:-1%" class="omres_{{forloop.counter}} red_result"></span>
-                                    {% endif %}
-                                    {% if 'purple' in i.color %}
-                                    <span style="margin-left:-1%" class="omres_{{forloop.counter}} purple_result"></span>
-                                    {% endif %} 
-                                    </td>                                   
-                                  </tr>        
-                                  {% endfor %}                           
-                                  {% endif %}  
-                              </tbody>
-                            </table> 
+                                  <div class="border m-1 p-3 rounded">       
+                                    <div class="row">
+                                      <div class="col detail">
+                                        ID: 
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.id_made }}
+                                      </div> 
+                                      <div class="col detail">
+                                        Amount:  
+                                      </div>
+                                      <div class="col detail">
+                                        {{ i.investment }}
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col detail">
+                                        Invested: 
+                                      </div>
+                                      <div class="col detail">
+                                        {% if i.color_selected in "red purple green" %}
+                                        <style>
+                                          .mores_{{forloop.counter}}{display: inline-block;}
+                                          </style>
+                                          {% if 'green' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mores_{{forloop.counter}} green_result"></span>
+                                          {% endif %}
+                                          {% if 'red' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mores_{{forloop.counter}} red_result"></span>
+                                          {% endif %}
+                                          {% if 'purple' in i.color_selected %}
+                                          <span style="margin-left:-1%" class="mores_{{forloop.counter}} purple_result"></span>                
+                                          {% endif %}  
+                                          {% else %}
+                                          <span style="margin-left:-1%">{{ i.num_selected }}</span>
+                                          {% endif %}                
+                                      </div>                                    
+                                      <div class="col detail">
+                                        Status: 
+                                      </div>
+                                      <div class="col detail">
+                                      {% if i.result == "won" %}
+                                        <span style="color:green">Won</span>
+                                      {% elif i.result == "lost" %}
+                                        <span style="color:tomato">Lost</span>
+                                      {% else %}                              
+                                      <span style="color:tomato">Wait</span>        
+                                      {% endif %}
+                                      </div>                                    
+                                    </div>                                                                                      
+                                   </div>        
+                                  {% endfor %}  
+                                  {% endif %} 
                           </div>                                      
               </div>
             </div>
@@ -1284,6 +1370,7 @@ $("#ref1").load(window.location.href + " #ref1" );
 }
 if((ts-nts)<=0){
 location.reload(false);
+
 }
 }, 1000);
 
@@ -1306,6 +1393,7 @@ $("#ref3").load(window.location.href + " #ref3" );
 }
 if((sts-snts)<=0){
 location.reload(false);
+
 }
 }, 1000);
 
@@ -1327,11 +1415,11 @@ if(((dts-dnts)<30)&&((dts-dnts)>25)){
 $("#ref5").load(window.location.href + " #ref5" );
 }
 if((dts-dnts)<0){
-location.reload(false);
+//location.reload(false);
 }
 }, 1000);
 
-var od = "{{ gold_end }}";
+var od = "{{ other_end }}";
 var od1 = od.split(":");
 var on = parseInt(od1[1]);
 var om = parseInt(od1[0]);
@@ -1340,7 +1428,7 @@ setInterval(function() {
 var ond = new Date();
 var onn = ond.getUTCSeconds();
 var onm = ond.getUTCMinutes();
-var onts = onm*60+onn;
+var onts = onm*60+onn; 
 var omints = Math.floor((ots-onts)/60);
 var osecs = (ots-onts)-omints*60;
 $("#other_min").text(omints);
@@ -1348,8 +1436,9 @@ $("#other_sec").text(osecs);
 if(((ots-onts)<30)&&((ots-onts)>25)){
 $("#ref7").load(window.location.href + " #ref7" );
 }
-if((ots-onts)<0){
+if(((ots-onts)<0)||((dts-dnts)<0)){
 location.reload(false);
+
 }
 }, 1000);
  }); 

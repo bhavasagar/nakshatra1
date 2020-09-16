@@ -9,6 +9,13 @@
 #login{
   color:  darkorange !important;    
 }
+label{
+font-weight:401 !important;
+} 
+#id_last_name{
+color:#23de02 !important;
+font-weight:401 !important;
+}
 </style>
   <main>
     <div class="container rounded">
@@ -27,7 +34,7 @@
               <div onclick="enable()" class="custom-control custom-checkbox">
                   <input type="checkbox" class="custom-control-input" id="defaultUnchecked">
                   <label class="custom-control-label" for="defaultUnchecked">Agree our <a href="{% url 'core:privacy' %}"><b style="color:blue" class="text-primary"> Terms and conditions.</b></a></label>
-              </div>
+              </div> 
               <button onclick="enable()" class='btn btn-primary mt-2' id="name" type="submit" disabled>{% trans "Sign Up" %} &raquo;</button>
               <div style="margin-bottom:32%"></div>
             </form>

@@ -1,16 +1,16 @@
 from .base import *
 import os
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+ALLOWED_HOSTS = ['nakshatra.fun','176.9.233.36']
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nak',
-        'USER': 'nak',
-        'PASSWORD': 'nak',
+        'NAME': 'naks',
+        'USER': 'naks',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
     }

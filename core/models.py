@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from django.conf import settings
+#settings.configure()
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Sum
@@ -23,10 +24,15 @@ class UserProfile(models.Model):
     total_amount = models.FloatField(default="0", max_length=5)
     won = models.FloatField(default="0", max_length=5)    
     refer_income = models.FloatField(default="0", max_length=5)
+    refer_income2 = models.FloatField(default="0", max_length=5)
     rv_income = models.FloatField(default="0", max_length=5)
     ref_code = models.CharField(default=False, max_length=15)
     refer = models.CharField(default=False, max_length=15)
-
+    referers = ArrayField(models.CharField(max_length=30),null=True, blank=True,default=list)
+    level = models.CharField(default="4", max_length=10)
+    children =  models.FloatField(default=0)
+    referral_rewards = models.FloatField(default="0", max_length=5)
+    c2 = models.FloatField(default=0)
     def __str__(self):
         return self.user.username 
 
@@ -53,6 +59,7 @@ class History(models.Model):
     result = models.CharField(max_length=10,default="unknown",null=True,blank=True)
     color = models.CharField(max_length=25,default="unknown",null=True,blank=True)
     mode = models.CharField(max_length=10,default="unknown",null=True,blank=True)
+    wamt =  models.CharField(max_length=10,null=True,blank=True)
     
     def __str__(self):
         return self.user.username      
@@ -73,7 +80,7 @@ class GoldGame(models.Model):
     status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
 
     def __str__(self):
-        return self.mode 
+        return str(self.mode)+" - "+str(self.id) 
 
     def save(self, *args, **kwargs):
         from datetime import datetime, timedelta        
@@ -100,7 +107,7 @@ class SilverGame(models.Model):
     status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
 
     def __str__(self, *args, **kwargs):
-        return self.mode 
+        return str(self.mode)+" - "+str(self.id)
 
     def save(self, *args, **kwargs):
         from datetime import datetime, timedelta        
@@ -126,7 +133,7 @@ class DiamondGame(models.Model):
     status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
 
     def __str__(self):
-        return self.mode 
+        return str(self.mode)+" - "+str(self.id) 
 
     def save(self, *args, **kwargs):
         from datetime import datetime, timedelta        
@@ -152,7 +159,7 @@ class OtherGame(models.Model):
     status = models.CharField(max_length=20,default="unknown",null=True, blank=True)    
  
     def __str__(self):
-        return self.mode 
+        return str(self.mode)+" - "+str(self.id) 
 
     def save(self, *args, **kwargs):
         from datetime import datetime, timedelta        
@@ -173,23 +180,6 @@ class Transaction(models.Model):
         if self.order_id is None and self.made_on and self.id:
             self.order_id = self.made_on.strftime('PAY2ME%Y%m%dODR') + str(self.id)
         return super().save(*args, **kwargs)
-
-# class Item(models.Model):
-#     title = models.CharField(max_length=100)
-#     price = models.FloatField()
-#     tag = models.CharField(max_length=10,blank=True,null=True,default='New')        
-#     category = models.CharField(max_length=20)
-#     label = models.CharField(max_length=10)
-#     slug = models.SlugField()
-#     description = models.TextField()
-#     image = models.ImageField()        
-#     def __str__(self):
-#         return self.title
-        
-#     def get_absolute_url(self):
-#         return reverse("core:product", kwargs={
-#             'slug': self.slug
-#         })
 
 
 class Paytm_history(models.Model):
@@ -233,6 +223,7 @@ class withdraw_requests(models.Model):
     def __str__(self):
         return '%s  (%s)' % (self.amount ,self.UPIID)
 
+
 class Carousal(models.Model):    
     image = models.ImageField(upload_to='images/', null=True)
     heading = models.CharField(max_length=15)
@@ -256,25 +247,6 @@ class Carousal3(models.Model):
     heading = models.CharField(max_length=15)
     description = models.CharField(max_length=100)
     urlfield = models.URLField(max_length = 200)
-# class Carousal(models.Model):
-#     carousal = models.many_to_one(Carousal, on_delete=models.CASCADE)    
-
-# class Multi_Carousal(models.Model):
-#     carousal = models.ForeignKey(Carousal, on_delete=models.CASCADE)    
-
-# class Team(models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rel_team', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=20,default="HKR")
-#     img = models.ImageField()
-#     desig = models.CharField(max_length=20,default="CEO")
-#     opinion = models.TextField()
-#     team = models.CharField(default=False,null=True,blank=True,max_length=30)
-#     facebook = models.URLField(max_length = 200)
-#     twitter = models.URLField(max_length = 200)
-#     email = models.EmailField()
-    
-#     def __str__(self):
-#         return self.user.username
         
 class Contact(models.Model):
     name = models.CharField(max_length=20)
@@ -284,16 +256,24 @@ class Contact(models.Model):
     
     def __str__(self):
         return self.name
-
-# class FAQs(models.Model):
-#     question = models.CharField(max_length=50)
-#     answer = models.CharField(max_length=500)
-    
-#     def __str__(self):
-#         return self.question
         
-#     class Meta:
-#         verbose_name_plural = 'FAQs'
+class Notifications(models.Model):
+    heading = models.CharField(max_length=15)
+    description = models.CharField(max_length=100)
+    urlfield = models.URLField(max_length = 200,null=True,blank=True)
+    made_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.heading
+         
+class Home_description(models.Model):
+    heading = models.CharField(max_length=15)
+    description1 = models.CharField(max_length=100)
+    description2 = models.CharField(max_length=100)
+    description3 = models.CharField(max_length=100)  
+
+    def __str__(self):
+        return self.heading 
 
 import random as rd
 from _datetime import timedelta
@@ -308,17 +288,24 @@ def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
         userprofile = UserProfile.objects.create(user=instance) 
         userprofile.ref_code = refgenrator()
-        userprofile.phone_number = instance.first_name        
+        userprofile.phone_number = instance.first_name
+        userprofile.referers.append('False')        
         if instance.last_name:
             try:
                 up = UserProfile.objects.get(ref_code=instance.last_name) 
                 userprofile.refer = up.user.username
+                up.children = float(up.children)+1
+                userprofile.referers.append(str(up.refer))
+                up.save()                           
+                rp = UserProfile.objects.get(user__username=up.refer)
+                rp.c2 = float(rp.c2)+1
+                rp.save()                                 
             except:
                 pass
         instance.first_name = ""
         instance.last_name = ""
         instance.save()
-        userprofile.save()
+        userprofile.save()        
 
 post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)
 
