@@ -4,7 +4,7 @@ from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 
-SECRET_KEY = 'jycx,rjrczgfyOzavhlujsurwnui$claddqXx6ezh0nmwque'
+SECRET_KEY = 'xxxx'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -97,13 +97,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'nakshatra.fun@gmail.com'
+EMAIL_HOST_USER = 'xxx@gmail.com'
 
-DEFAULT_FROM_EMAIL = 'nakshatra.fun@gmail.com'
+DEFAULT_FROM_EMAIL = 'xxx@gmail.com'
 
-SERVER_EMAIL = 'nakshatra.fun@gmail.com'
+SERVER_EMAIL = 'xxx@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'ganesh@123'
+EMAIL_HOST_PASSWORD = 'yyy'
 
 ACCOUNT_FORMS = { 
 'signup': 'core.forms.CustomSignupForm', 
