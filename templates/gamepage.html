@@ -568,7 +568,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
 			  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
 			  crossorigin="anonymous"></script>       
-</head>
 {% endblock extra_head%}
 
 {% block content %}
@@ -1365,12 +1364,11 @@ var mints = Math.floor((ts-nts)/60);
 var secs = (ts-nts)-mints*60;
 $("#gold_min").text(mints);
 $("#gold_sec").text(secs);
-if(((ts-nts)<30)&&((ts-nts)>25)){
-$("#ref1").load(window.location.href + " #ref1" );
+if(((ts-nts)<30)&&((ts-nts)>27)){
+  location.reload(true);
 }
 if((ts-nts)<=0){
-location.reload(false);
-
+location.reload(true);
 }
 }, 1000);
 
@@ -1388,11 +1386,11 @@ var smints = Math.floor((sts-snts)/60);
 var ssecs = (sts-snts)-smints*60;
 $("#silver_min").text(smints);
 $("#silver_sec").text(ssecs);
-if(((sts-snts)<30)&&((sts-snts)>25)){
-$("#ref3").load(window.location.href + " #ref3" );
+if(((sts-snts)<30)&&((sts-snts)>27)){
+  location.reload(true);
 }
 if((sts-snts)<=0){
-location.reload(false);
+location.reload(true);
 
 }
 }, 1000);
@@ -1411,9 +1409,9 @@ var dmints = Math.floor((dts-dnts)/60);
 var dsecs = (dts-dnts)-dmints*60;
 $("#diamond_min").text(dmints);
 $("#diamond_sec").text(dsecs);
-if(((dts-dnts)<30)&&((dts-dnts)>25)){
-$("#ref5").load(window.location.href + " #ref5" );
-}
+//if(((dts-dnts)<30)&&((dts-dnts)>25)){
+//$("#ref5").load(window.location.href + " #ref5" );
+//}
 if((dts-dnts)<0){
 //location.reload(false);
 }
@@ -1433,11 +1431,11 @@ var omints = Math.floor((ots-onts)/60);
 var osecs = (ots-onts)-omints*60;
 $("#other_min").text(omints);
 $("#other_sec").text(osecs);
-if(((ots-onts)<30)&&((ots-onts)>25)){
-$("#ref7").load(window.location.href + " #ref7" );
+if(((ots-onts)<30)&&((ots-onts)>27)){
+  location.reload(true);
 }
 if(((ots-onts)<0)||((dts-dnts)<0)){
-location.reload(false);
+location.reload(true);
 
 }
 }, 1000);

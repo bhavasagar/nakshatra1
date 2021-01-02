@@ -111,13 +111,20 @@ class Profile(LoginRequiredMixin, View):
                     self.request.user.save()
                     
             if self.request.POST.get('upiid'):    
-                if (len(self.request.POST.get('upiid'))>5 and len(self.request.POST.get('upiid'))<25) and int(self.request.POST.get('amt'))>100 and float(self.request.user.userprofile.total_amount)>=int(self.request.POST.get('amt')): 
+                noreqs = withdraw_requests.objects.filter(Q(user=self.request.user)&Q(made_on__gte=datetime.now()-timedelta(hours=24)))
+                if noreqs.count() > 0:
+                    messages.success(self.request,'Only one request is allowed in a day.')       
+                    context={}        
+                    return redirect('core:Profile')
+                if (len(self.request.POST.get('upiid'))>5 and len(self.request.POST.get('upiid'))<25) and int(self.request.POST.get('amt'))>=100 and float(self.request.user.userprofile.total_amount)>=int(self.request.POST.get('amt')): 
                     withdraw_request = withdraw_requests.objects.create(amount=str(self.request.POST.get('amt')),UPIID=self.request.POST.get('upiid'),user=self.request.user)         
                     self.request.user.userprofile.total_amount = float(self.request.user.userprofile.total_amount) - float(self.request.POST.get('amt'))
                     self.request.user.userprofile.save()
                     messages.success(self.request,'Money will be added to your account in 45 hours.')       
-                elif not (len(self.request.POST.get('upiid'))>5 and len(self.request.POST.get('upiid'))<25) and int(self.request.POST.get('amt'))>100:
+                if not (len(self.request.POST.get('upiid'))>5 and len(self.request.POST.get('upiid'))<25):                    
                     messages.warning(self.request,'Invalid details entered.')
+                if not int(self.request.POST.get('amt'))>=100:
+                    messages.warning(self.request,'Please enter amount greater than or equal to 100.')
                 if not float(self.request.user.userprofile.total_amount)>=int(self.request.POST.get('amt')): 
                     messages.warning(self.request,'Insufficient balance in your wallet.')                    
             context={}        
@@ -268,7 +275,18 @@ def index(request):
     return render(request,'index.html',context=context)      
 
 def home(request):        
-    return render(request,"home.html")
+    if request.user.is_superuser:
+        recharge_total,total = 0,0
+        yesterday = datetime.now()-timedelta(hours=29,minutes=30)
+        users = UserProfile.objects.all()
+        recharges = Paytm_history.objects.filter(TXNDATE__gte=yesterday)
+        for i in recharges:
+            recharge_total += float(i.TXNAMOUNT)
+        noreqs = withdraw_requests.objects.filter(made_on__gte=datetime.now()-timedelta(hours=24)).filter(paid=False).count()
+        for i in users:
+            total += float(i.total_amount)
+        context={'total':total,'recharge_total':recharge_total,'noreqs':noreqs}
+    return render(request,"home.html",context=context)
                 
     
 def payusers(game_id,mode):

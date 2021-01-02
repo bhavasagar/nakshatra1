@@ -4,7 +4,7 @@ from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 
-SECRET_KEY = 'xxxx'
+SECRET_KEY = 'zlngdsrwwlkedjcrvnyo8vnaL8kfjanxigwkwiljasRw.br{'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -97,13 +97,16 @@ EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'xxx@gmail.com'
+EMAIL_HOST_USER = 'youremail@gmail.com'
 
-DEFAULT_FROM_EMAIL = 'xxx@gmail.com'
+DEFAULT_FROM_EMAIL = 'youremail@gmail.com'
 
-SERVER_EMAIL = 'xxx@gmail.com'
+SERVER_EMAIL = 'youremail@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'yyy'
+EMAIL_HOST_PASSWORD = 'Mail password'
+
+# Turn off Google security (allow Less secure apps) in google dashboard.
+# For your reference https://support.google.com/accounts/answer/6010255?hl=en
 
 ACCOUNT_FORMS = { 
 'signup': 'core.forms.CustomSignupForm', 
