@@ -342,13 +342,13 @@
       background-image: linear-gradient(39deg, #fff 60%, #E6E6FA 70%) !important;
     }
 
-    @-webkit-keyframes blinker {
+    @-webkit-keyframeser {
       from {opacity: 1.0;}
       to {opacity: 0.0;}
     }
-    .blink{
-      text-decoration: blink;
-      -webkit-animation-name: blinker;
+    {
+      text-decoration:;
+      -webkit-animation-name:er;
       -webkit-animation-duration: 1.79s;
       -webkit-animation-iteration-count:infinite;
       -webkit-animation-timing-function:ease-in-out;
@@ -578,7 +578,7 @@
 </style>
     <div class='rules_and_recharges'>        
             <p class="left1">Balance: Rs. {{ request.user.userprofile.total_amount }}</p>            
-            <p class="left1">Member: {{ request.user.id }}</p>                        
+            <p style="opacity:0" class="left1">Member: {{ request.user.id }}</p>                        
             <p class="right1"><a href="{% url 'core:rules' %}">Game Rules</a></p>
             <p class="right1"><span class="fas fa-wallet mr-2 fa-spin"></span><a href="{% url 'core:payment' %}">Recharge</a></p>             
     </div>
@@ -598,7 +598,7 @@
             </style>
             <div id="container">
               <div id="slide" class="">
-                <div id="first" class="visible">
+                <div id="first" class="visible" style="padding-bottom: 5rem;">
                     <div id='ref1'>
                       <p class="id">Id:{{ gold_id }}</p>
                       <p id="demo"></p>
@@ -620,9 +620,9 @@
 <br>
                                                                         
                             <div class="row mt-5 pl-2 pr-2">
-                              <div onclick="openForm('Gold Green','green','{{ gold_status }}')" class="{{ gold_status }} col green_c"><span class="{{ gold_status }} blink">Join Green</span></div>
-                              <div onclick="openForm('Gold Purple','violet','{{ gold_status }}')" class="{{ gold_status }} col purple_c"><span class="{{ gold_status }} blink">Join Purple</span></div>
-                              <div onclick="openForm('Gold Red','red','{{ gold_status }}')" class="{{ gold_status }} col red_c"><span class="{{ gold_status }} blink">Join Red</span></div>                              
+                              <div onclick="openForm('Gold Green','green','{{ gold_status }}')" class="{{ gold_status }} col green_c"><span class="{{ gold_status }}">Join Green</span></div>
+                              <div onclick="openForm('Gold Purple','violet','{{ gold_status }}')" class="{{ gold_status }} col purple_c"><span class="{{ gold_status }}">Join Purple</span></div>
+                              <div onclick="openForm('Gold Red','red','{{ gold_status }}')" class="{{ gold_status }} col red_c"><span class="{{ gold_status }}">Join Red</span></div>                              
                             </div>
                           
                             <div class="row mt-2 pl-2 pr-2">
@@ -686,7 +686,7 @@
                               <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
                                   {% if my_gold_history %}
                                   {% for i in my_gold_history %}
-                                  <div class="border m-1 p-3 rounded">       
+                                  <div class="border m-1 p-3 rounded"  style="padding-bottom:5rem">       
                                     <div class="row">
                                       <div class="col detail">
                                         ID: 
@@ -742,7 +742,7 @@
                                  
                             </div>    
                 </div>
-                <div id="second" class="box">
+                <div id="second" class="box" style="padding-bottom: 5rem;">
                   <div id="ref3">
                   <p class="id">Id:{{silver_id}}</p>
                   <p class="clock">Time Left:</p>                   
@@ -760,12 +760,12 @@
                       </div>
                     </div>
 <br>
-                  <div class="game_container mt-5" >                        
+                  <div class="game_container mt-5" style="padding-bottom: 5rem;" >                        
                          
                             <div class="row mt-5 pl-2 pr-2">
-                              <div onclick="openForm('Silver Green','green','{{silver_status}}')" class="{{ silver_status }} col green_c"><span class="{{ silver_status }} blink">Join Green</span></div>
-                              <div onclick="openForm('Silver Purple','violet','{{silver_status}}')" class="{{ silver_status }} col purple_c"><span class="{{ silver_status }} blink">Join Purple</span></div>
-                              <div onclick="openForm('Silver Red','red','{{silver_status}}')" class="{{ silver_status }} col red_c"><span class="{{ silver_status }} blink">Join Red</span></div>                              
+                              <div onclick="openForm('Silver Green','green','{{silver_status}}')" class="{{ silver_status }} col green_c"><span class="{{ silver_status }}">Join Green</span></div>
+                              <div onclick="openForm('Silver Purple','violet','{{silver_status}}')" class="{{ silver_status }} col purple_c"><span class="{{ silver_status }}">Join Purple</span></div>
+                              <div onclick="openForm('Silver Red','red','{{silver_status}}')" class="{{ silver_status }} col red_c"><span class="{{ silver_status }}">Join Red</span></div>                              
                             </div>
                             
                             <div class="row mt-2 pl-2 pr-2">
@@ -829,7 +829,7 @@
                            <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
                                   {% if my_silver_history %}
                                   {% for i in my_silver_history %}
-                                  <div class="border m-1 p-3 rounded">       
+                                  <div class="border m-1 p-3 rounded"  style="padding-bottom:5rem">       
                                     <div class="row">
                                       <div class="col detail">
                                         ID: 
@@ -885,7 +885,7 @@
                             </div>  
                         </div>                        
                 </div>              
-                <div id="third" class="box">
+                <div id="third" class="box" style="padding-bottom: 5rem;">
                   <div id="ref5">
                   <p class="id">Id:{{diamond_id}}</p>
                   <p class="clock">Time Left:</p>                   
@@ -905,9 +905,9 @@
 <br>
                   <div class="game_container mt-5" >                                                
                           <div class="row mt-5 pl-2 pr-2">
-                            <div onclick="openForm('Diamond Green','green','{{diamond_status}}')" class="col green_c {{diamond_status}}"><span class="blink">Join Green</span></div>                            
-                            <div onclick="openForm('Diamond Purple','violet','{{diamond_status}}')" class="col purple_c {{diamond_status}}"><span class="blink">Join Purple</span></div>
-                            <div onclick="openForm('Diamond Red','red','{{diamond_status}}')" class="col red_c {{diamond_status}}"><span class="blink">Join Red</span></div>
+                            <div onclick="openForm('Diamond Green','green','{{diamond_status}}')" class="col green_c {{diamond_status}}"><span class="{{ diamond_status }}">Join Green</span></div>                            
+                            <div onclick="openForm('Diamond Purple','violet','{{diamond_status}}')" class="col purple_c {{diamond_status}}"><span class="{{ diamond_status }}">Join Purple</span></div>
+                            <div onclick="openForm('Diamond Red','red','{{diamond_status}}')" class="col red_c {{diamond_status}}"><span class="{{ diamond_status }}">Join Red</span></div>
                           </div>
                         
                           <div class="row mt-2 pl-2 pr-2">
@@ -970,7 +970,7 @@
                           <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
                                   {% if my_diamond_history %}
                                   {% for i in my_diamond_history %}
-                                  <div class="border m-1 p-3 rounded">       
+                                  <div class="border m-1 p-3 rounded"  style="padding-bottom:5rem">       
                                     <div class="row">
                                       <div class="col detail">
                                         ID: 
@@ -1026,7 +1026,7 @@
                           </div>
                         </div>
                 </div>
-                <div id="four" class="box">
+                <div id="four" class="box" style="padding-bottom: 5rem;">
                   <div id="ref7">
                   <p class="id">Id:{{other_id}}</p>
                   <p class="clock">Time Left:</p>                   
@@ -1047,9 +1047,9 @@
 <br>              
                   <div id="game_container" class="game_container mt-5" >                        
                           <div class="row mt-5 pl-2 pr-2">
-                            <div onclick="openForm('Other Green','green','{{ other_status }}')" class="col green_c {{other_status}}"><span class="blink">Join Green</span></div>                            
-                            <div onclick="openForm('Other Purple','violet','{{ other_status }}')" class="col purple_c {{other_status}}"><span class="blink">Join Purple</span></div>
-                            <div onclick="openForm('Other Red','red','{{ other_status }}')" class="col red_c {{other_status}}"><span class="blink">Join Red</span></div>
+                            <div onclick="openForm('Other Green','green','{{ other_status }}')" class="col green_c {{other_status}}"><span class="{{ other_status }}">Join Green</span></div>                            
+                            <div onclick="openForm('Other Purple','violet','{{ other_status }}')" class="col purple_c {{other_status}}"><span class="{{ other_status }}">Join Purple</span></div>
+                            <div onclick="openForm('Other Red','red','{{ other_status }}')" class="col red_c {{other_status}}"><span class="{{ other_status }}">Join Red</span></div>
                           </div>
                         
                           <div class="row mt-2 pl-2 pr-2">
@@ -1095,7 +1095,7 @@
                                     </style>
                                     {% if 'green' in i.color %}
                                     <span style="margin-left:-1%" class="ores_{{forloop.counter}} green_result"></span>
-                                    {% endif %}
+                                    {% endif %} 
                                     {% if 'red' in i.color %}
                                     <span style="margin-left:-1%" class="ores_{{forloop.counter}} red_result"></span>
                                     {% endif %}
@@ -1112,7 +1112,7 @@
                                <span class="mt-4 mb-3 myrecord p-2 ml-1">My Record:</span>                                                          
                                   {% if my_other_history %}
                                   {% for i in my_other_history %}
-                                  <div class="border m-1 p-3 rounded">       
+                                  <div class="border m-1 p-3 rounded" style="padding-bottom:5rem">       
                                     <div class="row">
                                       <div class="col detail">
                                         ID: 

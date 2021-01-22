@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile, Transaction, TravelDetails, Paytm_history, Paytm_order_history, ClubJoin, Carousal, Sizes_class, Reviews, Team, Ads, Itemimage, Itemdealer, Myorder, Sales, Categories, Extrasales, CarousalClub, ReviewsImage, Contact, FAQs
 
-from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Carousal, Contact, RedEnvelope, Carousal1, Carousal2, Carousal3, Notifications, Home_description
+from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Carousal, Contact, RedEnvelope, Carousal1, Carousal2, Carousal3, Notifications, Home_description, Payu
 
 # class AddressAdmin(admin.ModelAdmin):
 #     list_display = [
@@ -28,7 +28,7 @@ class Historyadmin(admin.ModelAdmin):
     search_fields = ['user__username']    
 
 class UserProfileAdmin(admin.ModelAdmin):
-    search_fields = ['user__username']    
+    search_fields = ['user__username']     
 
 
 admin.site.register(withdraw_requests,WDAdmin)
@@ -48,5 +48,5 @@ admin.site.register(Carousal3)
 admin.site.register(Notifications)
 admin.site.register(Home_description)
 admin.site.register(RedEnvelope)
-# admin.site.register(FAQs)
+admin.site.register(Payu) 
 admin.site.register(Contact)

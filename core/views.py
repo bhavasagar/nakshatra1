@@ -8,16 +8,18 @@ from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Contact, Carousal, RedEnvelope, Carousal1, Carousal2, Carousal3, Notifications, Home_description
+from .models import History, UserProfile, Transaction, Paytm_history, GoldGame, SilverGame, DiamondGame, OtherGame, withdraw_requests, Contact, Carousal, RedEnvelope, Carousal1, Carousal2, Carousal3, Notifications, Home_description, Payu 
 import random
 from django.shortcuts import reverse
 import string
+import hashlib
+import requests
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from .paytm import generate_checksum, verify_checksum
 import smtplib
 from django.core.paginator import Paginator
@@ -27,6 +29,8 @@ from django.db.models import Q
 from django.db.models.functions import ( ExtractDay, ExtractHour, ExtractMinute, ExtractMonth, ExtractSecond, ExtractWeek, ExtractWeekDay, ExtractYear )
 from django.utils.html import format_html
 import pytz
+from random import randint
+from django.template.context_processors import csrf
 
 utc=pytz.UTC     
             
@@ -160,7 +164,7 @@ def error_404(request, exception):
 def error_413(request,  exception):
         data = {}
         return render(request,'404error.html', data)  
-        
+    
 
 @login_required
 def payment(request):
@@ -177,35 +181,124 @@ def payment(request):
             return render(request, 'payments.html')
         transaction = Transaction.objects.create(made_by=request.user, amount=amt)
         transaction.save()
-        merchant_key = settings.PAYTM_SECRET_KEY
+        data = {}
+        txnid = get_transaction_id()
+        hash_ = generate_hash(request, txnid, amt)
+        hash_string = get_hash_string(request, txnid, amt)
+        payu =Payu.objects.create(trans_id=txnid,status="Intiated")
+        data["action"] = settings.PAYMENT_URL_LIVE 
+        data["amount"] = float(amt)
+        data["productinfo"]  = 'Recharge'
+        data["key"] = settings.KEY
+        data["txnid"] = txnid
+        data["hash"] = hash_
+        data["hash_string"] = hash_string
+        data["firstname"] = str(request.user.username)
+        data["email"] = 'nak54321go@gmail.com'
+        data["phone"] = '8978305022'
+        data["service_provider"] = settings.SERVICE_PROVIDER
+        data["furl"] = request.build_absolute_uri(reverse("core:payment_failure"))
+        data["surl"] = request.build_absolute_uri(reverse("core:payment_success"))
+        
+        return render(request, "pay.html", data)        
 
-        params = (
-            ('MID', settings.PAYTM_MERCHANT_ID),
-            ('ORDER_ID', str(transaction.order_id)),
-            ('CUST_ID', str(transaction.made_by.email)),
-            ('TXN_AMOUNT', str(transaction.amount)),
-            ('CHANNEL_ID', settings.PAYTM_CHANNEL_ID),
-            ('WEBSITE', settings.PAYTM_WEBSITE),
-            # ('EMAIL', request.user.email),
-            # ('MOBILE_N0', '9911223388'),
-            ('INDUSTRY_TYPE_ID', settings.PAYTM_INDUSTRY_TYPE_ID),
-            ('CALLBACK_URL', 'https://nakshatra.fun/callback/'),
-            ('MERC_UNQ_REF', str(request.user.id)),
-            # ('PAYMENT_MODE_ONLY', 'NO'),
-        )
+def generate_hash(request, txnid, amt): 
+    try:
+        hash_string = get_hash_string(request,txnid,amt)
+        generated_hash = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
+        return generated_hash
+    except Exception as e:       
+        logging.getLogger("error_logger").error(traceback.format_exc())
+        return None
 
-        paytm_params = dict(params)
-        checksum = generate_checksum(paytm_params, merchant_key)
+def get_hash_string(request, txnid, amt):
+    hash_string = settings.KEY+"|"+txnid+"|"+str(float(amt))+"|"+'Recharge'+"|"
+    hash_string += str(request.user.username)+"|"+'nak54321go@gmail.com'+"|"
+    hash_string += "||||||||||"+settings.SALT
 
-        transaction.checksum = checksum
-        transaction.save()
+    return hash_string
 
-        paytm_params['CHECKSUMHASH'] = checksum
-        print('SENT: ', checksum)
-        return render(request, 'redirect.html', context=paytm_params)
+
+def get_transaction_id():
+    hash_object = hashlib.sha256(str(randint(0,9999)).encode("utf-8"))
+    txnid = hash_object.hexdigest().lower()[0:32]
+    return txnid
+
+@csrf_protect
+@csrf_exempt
+def payment_success(request):
+    c = {}
+    c.update(csrf(request))
+    status=request.POST["status"]
+    firstname=request.POST["firstname"]
+    amount=request.POST["amount"]
+    txnid=request.POST["txnid"]
+    posted_hash=request.POST["hash"]
+    key=request.POST["key"]
+    productinfo=request.POST["productinfo"]
+    email=request.POST["email"]
+    salt=settings.SALT
+    try:
+      additionalCharges=request.POST["additionalCharges"]
+      retHashSeq=additionalCharges+'|'+salt+'|'+status+'|||||||||||'+email+'|'+firstname+'|'+productinfo+'|'+amount+'|'+txnid+'|'+key
+    except Exception:
+      retHashSeq = salt+'|'+status+'|||||||||||'+email+'|'+firstname+'|'+productinfo+'|'+amount+'|'+txnid+'|'+key
+    hashh=hashlib.sha512(retHashSeq.encode("utf-8")).hexdigest().lower()
+    if hashh !=posted_hash:
+      message="Invalid Transaction. Please try again"
+    else:
+      message="Payment Failed | Please try again"
+      cust = User.objects.get(username=firstname)
+      up = UserProfile.objects.get(user=cust)    
+      payu = Payu.objects.get(trans_id=txnid)
+      if not payu.added:                                   
+        up.total_amount = float(up.total_amount) + float(amount)
+        up.save()
+        payu.added = True        
+        payu.save()
+      payu.status = "success"
+      payu.save()
+      msg = "PS"
+      oid =  str(txnid)
+      ta =  str(amount)
+    return render(request,'success.html',{"message":message+"Your account balance is "+str(up.total_amount)})
+ 
+@csrf_protect
+@csrf_exempt
+def payment_failure(request):
+    c = {}
+    c.update(csrf(request))
+    status=request.POST["status"]
+    firstname=request.POST["firstname"]
+    amount=request.POST["amount"]
+    txnid=request.POST["txnid"]
+    posted_hash=request.POST["hash"]
+    key=request.POST["key"]
+    productinfo=request.POST["productinfo"]
+    email=request.POST["email"]
+    salt=settings.SALT
+    try:
+      additionalCharges=request.POST["additionalCharges"]
+      retHashSeq=additionalCharges+'|'+salt+'|'+status+'|||||||||||'+email+'|'+firstname+'|'+productinfo+'|'+amount+'|'+txnid+'|'+key
+    except Exception:
+      retHashSeq = salt+'|'+status+'|||||||||||'+email+'|'+firstname+'|'+productinfo+'|'+amount+'|'+txnid+'|'+key
+    hashh=hashlib.sha512(retHashSeq.encode("utf-8")).hexdigest().lower()
+    if hashh !=posted_hash:
+      message="Invalid Transaction. Please try again"
+    else:
+      message="Payment Failed | Please try again"
+      cust = User.objects.get(username=firstname)
+      up = UserProfile.objects.get(user=cust)                                 
+      payu = Payu.objects.get(trans_id=txnid)
+      payu.status = "failure"
+      payu.save()
+      msg = "PF"
+      oid =  str(txnid)
+      ta =  str(amount)
+    return render(request,'success.html',{"message":message+"Your account balance is "+str(up.total_amount)})
 
 @csrf_exempt
-def callback(request):
+def callback(request): 
     if request.method == "POST":
         user = request.user
         MERCHANT_KEY = settings.PAYTM_SECRET_KEY

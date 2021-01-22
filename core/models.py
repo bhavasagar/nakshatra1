@@ -181,6 +181,14 @@ class Transaction(models.Model):
             self.order_id = self.made_on.strftime('PAY2ME%Y%m%dODR') + str(self.id)
         return super().save(*args, **kwargs)
 
+class Payu(models.Model):
+  trans_id = models.CharField(max_length=100, null=True, blank=True)
+  time = models.DateTimeField('TXN DATE', default=timezone.now)
+  status = models.CharField(max_length=100, null=True, blank=True)
+  added = models.BooleanField(default=False)
+   
+  def __str__(self):
+        return '%s  (%s)' % (self.trans_id ,self.pk)
 
 class Paytm_history(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rel_payment_order_paytm', on_delete=models.CASCADE, null=True, default=None)

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {%load static%}
 {% load notif_template_tags %}
-{% block head_title %}Nakshatra | Settings{% endblock %}
+{% block head_title %}akfun | Settings{% endblock %}
 
 {% block extra_head %}
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet"> 
@@ -218,9 +218,9 @@ font-weight:500;
     <div class="profile_heading">  
       <div class="profilepic">
         {% if  request.user.userprofile.userphoto %}
-          <img class="img" src="https://nakshatra.fun/media/{{request.user.userprofile.userphoto}}">
+          <img class="img" src="https://akfun.fun/media/{{request.user.userprofile.userphoto}}">
         {% else %}
-          <img class="img" src="https://nakshatra.fun/media/images/apple-touch-icon.png">
+          <img class="img" src="https://akfun.fun/media/images/android-icon-192x192.png"> 
         {% endif %}
       </div>
       <div class="pt-2">
@@ -242,7 +242,7 @@ font-weight:500;
       <span id="share" class="fas fa-share font-weight-bold fa-2x">   Share                                       </span>            
       <div  id="icons_share">      
       <hr>
-        <a class="fab fa-whatsapp fa-3x ml-3" href="whatsapp://send?text=Play on Nakshatra with my referal link https://nakshatra.fun{{ request.user.userprofile.get_absolute_url }}" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp"></a><a class="fab fa-telegram fa-3x ml-3" href="https://t.me/share/url?url=https://nakshatra.fun{{ request.user.userprofile.get_absolute_url }}&text=Play on Nakshatra with my referal link" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on Telegram"></a></div>        
+        <a class="fab fa-whatsapp fa-3x ml-3" href="whatsapp://send?text=Play on AkFun with my referal link https://akfun.fun{{ request.user.userprofile.get_absolute_url }}" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp"></a><a class="fab fa-telegram fa-3x ml-3" href="https://t.me/share/url?url=https://akfun.fun{{ request.user.userprofile.get_absolute_url }}&text=Play on AkFun with my referal link" data-action="share/whatsapp/share" onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on Telegram"></a></div>        
       </div><hr>
       <div id="wamt" onclick="openbox('withdraw_amt')"  class="line mb-6">
         <span class="fas fa-hand-holding fa-2x"><span style="font-family: 'Kalam', cursive;">  Withdraw Amount</span></span>        
@@ -277,7 +277,7 @@ font-weight:500;
       <div style="margin-bottom: 32%;"></div>
     </div> 
     <div class="box">   
-    <input type="text" value="https://nakshatra.fun{{ request.user.userprofile.get_absolute_url }}" id="myInput1"></div>
+    <input type="text" value="https://akfun.fun{{ request.user.userprofile.get_absolute_url }}" id="myInput1"></div>
     <style>
     .tab1 {
     height: auto;
@@ -334,12 +334,8 @@ font-weight:500;
           <div class="pl-3 pr-3 pt-2 mb-1">
           <h3 class="ml-1">Transaction Charges</h3>
           <ul>
-          <li>For Rs. 100 to Rs. 500, Rs. 1 is deducted.</li>
-          <li>For Rs. 500 to Rs. 1000, Rs. 2 is deducted.</li>
-          <li>For Rs. 1000 to Rs. 2000, Rs. 5 is deducted.</li>
-          <li>For Rs. 2000 to Rs. 3000, Rs. 8 is deducted.</li>
-          <li>For Rs. 3000 to Rs. 5000, Rs. 12 is deducted.</li>
-          <li>Above Rs. 5000, Rs. 24 is deducted.</li>          
+          <li>Upto Rs. 1500,  Rs. 45 will  be deducted</li>
+          <li>Above 1500, %3 of total will be deducted for withdrawal.</li>      
           </ul>           
           </div>          
           <button onclick="backbox()" class="back-button" style="margin-bottom: 20%;">&lt;&lt;Back</button>
@@ -390,11 +386,9 @@ font-weight:500;
     <div id="promotions" class="box">
       <div class="pl-3 pr-3 pt-2 mb-1">
           <h3 class="ml-1">Refer income is added as</h3>
-          <ul>
-          <li>For Level 4 users, refer income is 0.75% of Downliner investment.</li>
-          <li>For Level 3 users, refer income is 0.8% of Downliner investment.</li>
-          <li>For Level 2 users, refer income is 0.9% of Downliner investment.</li>
-          <li>For Level 1 users, refer income is 0.1% of Downliner investment.</li>          
+          <ul>                   
+          <li>For Level 1 users, refer income is 0.87% of Downliner investment.</li>
+          <li>For Level 2 users, refer income is 0.58% of Downliner investment.</li>          
           </ul>           
       </div>
       <h4 class="ml-3" style="color: tomato;">Downliners</h4>                
